@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso Completo: Criar um Site do Zero — HTML, CSS, Modo Escuro e IA</title>
+<meta name="description" content="Curso prático de HTML/CSS com atalhos, modo escuro, prompts de IA e 3 bases de site completas embutidas nesta mesma página.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #fafaf9;
+    --bg-elevated: #ffffff;
+    --bg-editor: #1e1e1e;
+    --bg-editor-bar: #171717;
+    --text: #1c1c1c;
+    --text-dim: #5b5b5b;
+    --border: #e2e0dc;
+    --accent: #2563eb;
+    --accent-2: #b45309;
+    --code-text: #d4d4d4;
+    --code-comment: #6a9955;
+    --code-keyword: #c586c0;
+    --code-string: #ce9178;
+    --code-func: #dcdcaa;
+    --code-tag: #569cd6;
+    --code-attr: #9cdcfe;
+    --code-line: #6b6b6b;
+    --shadow: 0 8px 24px rgba(0,0,0,.06);
+    --shadow-code: 0 0 0 1px rgba(37,99,235,.15), 0 20px 50px -12px rgba(0,0,0,.35);
+    --radius: 10px;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  [data-theme="dark"]{
+    --bg: #121317;
+    --bg-elevated: #191b20;
+    --bg-editor: #16171b;
+    --bg-editor-bar: #101114;
+    --text: #e8e6e1;
+    --text-dim: #9a9890;
+    --border: #2a2d33;
+    --accent: #6ea8fe;
+    --accent-2: #f0b56d;
+    --shadow: 0 8px 30px rgba(0,0,0,.45);
+    --shadow-code: 0 0 0 1px rgba(110,168,254,.2), 0 25px 60px -12px rgba(0,0,0,.7);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height:1.65; transition: background .25s ease, color .25s ease;
+  }
+  h1,h2,h3,.mono-label{ font-family:var(--font-display); }
+  code, pre, .code-window, .kbd{ font-family:var(--font-mono); }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  .wrap{ max-width:1140px; margin:0 auto; padding:0 24px; }
+
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .top-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1140px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background:var(--accent); }
+  nav.top-nav{ display:flex; gap:18px; font-size:14px; }
+  nav.top-nav a{ color:var(--text-dim); }
+  nav.top-nav a:hover{ color:var(--text); text-decoration:none; }
+  #theme-toggle{
+    display:flex; align-items:center; gap:8px;
+    background:var(--bg-elevated); border:1px solid var(--border);
+    color:var(--text); padding:8px 14px; border-radius:999px;
+    cursor:pointer; font-size:13px; font-family:var(--font-mono);
+    transition: background .2s, transform .15s;
+  }
+  #theme-toggle:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+
+  .hero{ padding:70px 0 40px; }
+  .eyebrow{
+    display:inline-block; font-family:var(--font-mono); font-size:12px;
+    color:var(--accent); border:1px solid var(--border); padding:4px 10px;
+    border-radius:999px; margin-bottom:18px;
+  }
+  h1.title{ font-size:clamp(32px,5vw,52px); line-height:1.1; letter-spacing:-.02em; }
+  h1.title .hl{ color:var(--accent); }
+  .lede{ margin-top:18px; max-width:680px; color:var(--text-dim); font-size:17px; }
+
+  /* ===================== BLOCOS DE CÓDIGO — VERSÃO EM DESTAQUE ===================== */
+  .code-window{
+    margin-top:36px; background:var(--bg-editor); border-radius:14px;
+    overflow:hidden; box-shadow:var(--shadow-code); border:1px solid var(--border);
+  }
+  .code-window .bar, .snippet .bar{
+    display:flex; align-items:center; gap:10px; padding:12px 16px;
+    background:var(--bg-editor-bar); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .code-window .bar span.dot3, .snippet .bar span.dot3{ width:11px; height:11px; border-radius:50%; }
+  .dot3.r{ background:#ff5f56; } .dot3.y{ background:#ffbd2e; } .dot3.g{ background:#27c93f; }
+  .bar .name{ margin-left:6px; color:#9c9c9c; font-size:13px; font-family:var(--font-mono); }
+  .bar .spacer{ flex:1; }
+  .copy-btn{
+    display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:12px;
+    background:rgba(255,255,255,.06); color:#d7d7d7; border:1px solid rgba(255,255,255,.1);
+    padding:6px 11px; border-radius:7px; cursor:pointer; transition:.15s;
+  }
+  .copy-btn:hover{ background:var(--accent); color:#0b0b0c; border-color:var(--accent); }
+  .copy-btn.copied{ background:#2fbf71; color:#06210f; border-color:#2fbf71; }
+
+  .code-window pre, .snippet pre{
+    margin:0; padding:22px 24px; overflow-x:auto; font-size:14.8px;
+    color:var(--code-text); line-height:1.85;
+  }
+  .ln{ color:var(--code-line); user-select:none; display:inline-block; width:28px; }
+  .tag{ color:var(--code-tag); font-weight:600; }
+  .attr{ color:var(--code-attr); }
+  .str{ color:var(--code-string); }
+  .cmt{ color:var(--code-comment); font-style:italic; }
+  .kw{ color:var(--code-keyword); }
+  .fn{ color:var(--code-func); }
+
+  /* Bloco "featured": maior destaque ainda, usado nos códigos-chave do curso */
+  .code-window.featured{
+    border:1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), var(--shadow-code);
+  }
+  .code-window.featured .bar{ background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 18%, var(--bg-editor-bar)), var(--bg-editor-bar)); }
+
+  nav.top-nav a.nav-hl{ color:var(--accent); font-weight:700; }
+
+  /* ===================== NO-CODE COM IA — seção em destaque máximo ===================== */
+  section.spotlight{
+    border:none; margin:44px 0 0; padding:0;
+    border-radius:22px; overflow:hidden; position:relative;
+    background:
+      radial-gradient(1100px 420px at 12% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      radial-gradient(900px 380px at 100% 0%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 55%),
+      var(--bg-elevated);
+    border:1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent), 0 30px 70px -20px rgba(0,0,0,.25);
+  }
+  section.spotlight .spot-inner{ padding:52px 40px 46px; }
+  .spot-badge{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12.5px;
+    color:#fff; background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%, var(--accent-2)));
+    padding:6px 14px; border-radius:999px; margin-bottom:18px; font-weight:700; letter-spacing:.02em;
+  }
+  section.spotlight h2{ font-size:34px; letter-spacing:-.02em; max-width:760px; }
+  section.spotlight > .spot-inner > p{ color:var(--text-dim); max-width:700px; margin-top:14px; font-size:16px; }
+
+  .vs-row{ display:flex; gap:14px; margin:26px 0 6px; flex-wrap:wrap; }
+  .vs-pill{
+    font-family:var(--font-mono); font-size:12.5px; padding:8px 14px; border-radius:999px;
+    border:1px solid var(--border); background:var(--bg); color:var(--text-dim);
+  }
+  .vs-pill b{ color:var(--text); }
+
+  .nocode-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:30px; }
+  .nocode-card{
+    background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:22px;
+    box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px; position:relative;
+    transition: transform .15s, border-color .15s;
+  }
+  .nocode-card:hover{ transform:translateY(-3px); border-color:color-mix(in srgb, var(--accent) 40%, var(--border)); }
+  .nocode-card .nc-head{ display:flex; align-items:center; justify-content:space-between; }
+  .nocode-card h3{ font-size:17px; }
+  .nocode-card .nc-tag{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border)); padding:3px 8px; border-radius:999px; }
+  .nocode-card p.nc-desc{ font-size:13.6px; color:var(--text-dim); }
+  .nocode-card .prompt{ margin-top:2px; }
+  .nocode-card a.go{
+    margin-top:auto; font-family:var(--font-mono); font-size:12.5px; text-align:center;
+    border:1px solid var(--border); padding:9px; border-radius:9px; color:var(--text);
+  }
+  .nocode-card a.go:hover{ background:var(--accent); color:#fff; border-color:var(--accent); text-decoration:none; }
+
+  .nocode-flow{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:34px;
+  }
+  .flow-step{ background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px; }
+  .flow-step .fs-num{ font-family:var(--font-mono); color:var(--accent); font-size:12px; font-weight:700; }
+  .flow-step h4{ font-size:14.5px; margin-top:6px; }
+  .flow-step p{ font-size:12.8px; color:var(--text-dim); margin-top:5px; }
+
+  .nocode-note{
+    margin-top:28px; font-size:14px; color:var(--text-dim); background:var(--bg);
+    border:1px dashed var(--border); border-radius:12px; padding:16px 18px;
+  }
+  .nocode-note b{ color:var(--text); }
+
+  @media (max-width:900px){
+    .nocode-grid{ grid-template-columns:1fr 1fr; }
+    .nocode-flow{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:600px){
+    .nocode-grid, .nocode-flow{ grid-template-columns:1fr; }
+    section.spotlight .spot-inner{ padding:36px 22px 34px; }
+  }
+
+  /* ===================== ABAS PRINCIPAIS: Código real vs No-code com IA ===================== */
+  .master-tabs{
+    display:flex; gap:12px; margin:44px 0 0; flex-wrap:wrap;
+  }
+  .master-tab{
+    flex:1; min-width:260px; display:flex; align-items:center; gap:14px;
+    padding:20px 22px; border-radius:16px; border:1.5px solid var(--border);
+    background:var(--bg-elevated); cursor:pointer; text-align:left;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    font-family: system-ui, sans-serif;
+  }
+  .master-tab:hover{ transform:translateY(-2px); }
+  .master-tab .mt-icon{
+    width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:20px; background:var(--bg); border:1px solid var(--border); flex-shrink:0;
+  }
+  .master-tab .mt-text{ display:flex; flex-direction:column; gap:3px; }
+  .master-tab .mt-title{ font-family:var(--font-display); font-size:16.5px; font-weight:600; color:var(--text); display:block; }
+  .master-tab .mt-sub{ font-size:12.8px; color:var(--text-dim); display:block; line-height:1.4; }
+  .master-tab.active{
+    border-color:var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent), var(--shadow);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, var(--bg-elevated)), var(--bg-elevated));
+  }
+  .master-tab.active .mt-icon{ background:var(--accent); border-color:var(--accent); }
+  .master-panel{ display:none; }
+  .master-panel.active{ display:block; }
+  @media (max-width:700px){ .master-tabs{ flex-direction:column; } }
+
+  /* ---------- Seções gerais ---------- */
+  section{ padding:56px 0; border-top:1px solid var(--border); }
+  section h2{ font-size:28px; letter-spacing:-.01em; }
+  .step-num{ font-family:var(--font-mono); color:var(--accent); font-size:13px; display:block; margin-bottom:8px; }
+  section > p, section > .lede-sub{ color:var(--text-dim); max-width:760px; margin-top:12px; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:24px; }
+  .card{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .card h3{ font-size:16px; margin-bottom:6px; }
+  .card p{ font-size:14px; margin-top:6px; color:var(--text-dim); }
+
+  .snippet{ background:var(--bg-editor); border-radius:12px; margin:18px 0; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow-code); }
+
+  table.shortcuts{ width:100%; border-collapse:collapse; margin-top:20px; font-size:14px; }
+  table.shortcuts th, table.shortcuts td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); }
+  table.shortcuts th{ color:var(--text-dim); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; }
+  .kbd{ background:var(--bg-elevated); border:1px solid var(--border); border-bottom-width:2px; padding:2px 7px; border-radius:6px; font-size:12.5px; }
+
+  .ai-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:24px; }
+  .ai-card{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); }
+  .ai-card .ai-head{ display:flex; align-items:center; justify-content:space-between; }
+  .ai-card h3{ font-size:18px; }
+  .ai-card .go{ font-family:var(--font-mono); font-size:12.5px; border:1px solid var(--border); padding:6px 12px; border-radius:999px; color:var(--text); }
+  .ai-card .go:hover{ background:var(--accent); color:#fff; border-color:var(--accent); text-decoration:none; }
+  .prompt-list{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .prompt{ font-family:var(--font-mono); font-size:12.8px; background:var(--bg); border:1px dashed var(--border); border-radius:8px; padding:10px 12px; color:var(--text-dim); }
+
+  /* ===================== BASES EMBUTIDAS (tabs) ===================== */
+  .base-block{ margin-top:44px; }
+  .base-head{ display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+  .base-head h3{ font-size:22px; }
+  .base-head .lines-badge{ font-family:var(--font-mono); font-size:12px; color:var(--accent); border:1px solid var(--border); padding:4px 10px; border-radius:999px; }
+  .base-desc{ color:var(--text-dim); font-size:14.5px; max-width:680px; margin-bottom:16px; }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:0; }
+  .tab-btn{
+    font-family:var(--font-mono); font-size:13px; padding:9px 18px; border-radius:10px 10px 0 0;
+    border:1px solid var(--border); border-bottom:none; background:var(--bg-elevated); color:var(--text-dim); cursor:pointer;
+  }
+  .tab-btn.active{ background:var(--bg-editor); color:#fff; border-color:color-mix(in srgb, var(--accent) 40%, var(--border)); }
+
+  .base-panel{ display:none; }
+  .base-panel.active{ display:block; }
+
+  .code-full-window{
+    background:var(--bg-editor); border-radius:0 12px 12px 12px; overflow:hidden;
+    box-shadow:var(--shadow-code); border:1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+  .code-full-window pre{
+    margin:0; padding:22px 24px; overflow:auto; max-height:560px;
+    font-size:13.6px; line-height:1.75; color:var(--code-text);
+  }
+  .code-full-window .bar{ border-radius:0; }
+
+  .preview-frame-wrap{
+    background:var(--bg-elevated); border-radius:0 12px 12px 12px; overflow:hidden;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+  }
+  .preview-frame-wrap iframe{ width:100%; height:640px; border:none; display:block; background:#fff; }
+  .preview-note{ padding:10px 16px; font-size:12.5px; color:var(--text-dim); background:var(--bg); border-top:1px solid var(--border); }
+
+  footer{ padding:40px 0 70px; color:var(--text-dim); font-size:13px; text-align:center; }
+
+  @media (max-width:760px){
+    .grid2, .ai-grid{ grid-template-columns:1fr; }
+    nav.top-nav{ display:none; }
+    .code-full-window pre{ max-height:420px; }
+    .preview-frame-wrap iframe{ height:480px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span> curso<span style="color:var(--text-dim)">.criar-sites</span></div>
+    <nav class="top-nav">
+      <a href="#trilha-nocode" class="nav-hl">No-code com IA</a>
+      <a href="#estrutura">Estrutura</a>
+      <a href="#modo-escuro">Modo escuro</a>
+      <a href="#atalhos">Atalhos</a>
+      <a href="#ias">IAs</a>
+      <a href="#bases">Bases completas</a>
+    </nav>
+    <button id="theme-toggle" aria-label="Alternar modo escuro">
+      <span id="theme-icon">🌙</span> <span id="theme-label">Modo escuro</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" style="border:none;">
+    <span class="eyebrow">HTML · CSS · JS · IA — tudo embutido nesta página</span>
+    <h1 class="title">Como criar um site do zero, <span class="hl">com código real e em destaque</span>.</h1>
+    <p class="lede">Curso direto ao ponto: a estrutura de um arquivo HTML, o <code>&lt;head&gt;</code> e o <code>&lt;style&gt;</code>, um sistema completo de modo escuro (o botão lá em cima é um exemplo ao vivo), atalhos, como usar IA (ChatGPT e Grok), e — tudo na mesma página, sem baixar nada — <b>o código-fonte inteiro</b> de 3 sites completos, com botão de copiar e preview ao vivo.</p>
+  </section>
+
+  <!-- ===================== SELETOR DE TRILHA: Código real vs No-code com IA ===================== -->
+  <div class="master-tabs" role="tablist">
+    <button class="master-tab active" data-master="trilha-code" id="tab-trilha-code">
+      <span class="mt-icon">🧑‍💻</span>
+      <span class="mt-text"><span class="mt-title">Código real</span><span class="mt-sub">Escreva HTML/CSS/JS você mesmo, do zero</span></span>
+    </button>
+    <button class="master-tab" data-master="trilha-nocode" id="tab-trilha-nocode">
+      <span class="mt-icon">🤖</span>
+      <span class="mt-text"><span class="mt-title">No-code com IA</span><span class="mt-sub">Descreva o site e a IA gera tudo por você</span></span>
+    </button>
+  </div>
+
+  <!-- ===================== TRILHA: CÓDIGO REAL ===================== -->
+  <div class="master-panel active" id="trilha-code">
+
+  <!-- ============================================================ -->
+  <section id="estrutura">
+    <span class="step-num">01</span>
+    <h2>A estrutura base de todo arquivo HTML</h2>
+    <p>Todo site, simples ou complexo, começa com o mesmo esqueleto. Entender essas 6 partes já resolve 80% da confusão de quem está começando.</p>
+
+    <div class="grid2">
+      <div class="card"><h3>&lt;!DOCTYPE html&gt;</h3><p>Primeira linha, sempre. Diz ao navegador "isso é HTML5". Sem isso, o navegador pode renderizar em "modo estranho", com CSS quebrado.</p></div>
+      <div class="card"><h3>&lt;html lang="pt-BR"&gt;</h3><p>Envolve tudo. O atributo <code>lang</code> ajuda leitores de tela e o Google a saber o idioma — não é decoração, tem efeito real de acessibilidade e SEO.</p></div>
+      <div class="card"><h3>&lt;head&gt;</h3><p>A parte que <b>não aparece</b> na página. Vive aqui: título da aba, favicon, meta tags, links para CSS e o próprio <code>&lt;style&gt;</code>.</p></div>
+      <div class="card"><h3>&lt;body&gt;</h3><p>Tudo que aparece na tela. Se o head é o "escritório" da página, o body é a "vitrine".</p></div>
+    </div>
+
+    <div class="code-window featured">
+      <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">index.html</span><span class="spacer"></span><button class="copy-btn" data-copy-target="cp-index">📋 Copiar</button></div>
+      <pre id="cp-index"><span class="ln">1</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="ln">2</span><span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-BR"</span><span class="tag">&gt;</span>
+<span class="ln">3</span>  <span class="tag">&lt;head&gt;</span>
+<span class="ln">4</span>    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>
+<span class="ln">5</span>    <span class="tag">&lt;title&gt;</span>Meu site<span class="tag">&lt;/title&gt;</span>
+<span class="ln">6</span>    <span class="cmt">&lt;!-- CSS entra aqui dentro do head --&gt;</span>
+<span class="ln">7</span>    <span class="tag">&lt;style&gt;</span> <span class="fn">body</span> { <span class="attr">margin</span>: 0; } <span class="tag">&lt;/style&gt;</span>
+<span class="ln">8</span>  <span class="tag">&lt;/head&gt;</span>
+<span class="ln">9</span>  <span class="tag">&lt;body&gt;</span>
+<span class="ln">10</span>    <span class="tag">&lt;h1&gt;</span>Olá, mundo<span class="tag">&lt;/h1&gt;</span>
+<span class="ln">11</span>  <span class="tag">&lt;/body&gt;</span>
+<span class="ln">12</span><span class="tag">&lt;/html&gt;</span></pre>
+    </div>
+    <p style="margin-top:8px; margin-bottom:22px;">Esse é o esqueleto mínimo de qualquer site. Todo exemplo abaixo parte exatamente daqui.</p>
+
+    <div class="code-window featured">
+      <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">head-completo.html</span><span class="spacer"></span><button class="copy-btn" data-copy-target="cp-head">📋 Copiar</button></div>
+      <pre id="cp-head"><span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Codificação de caracteres: sem isso, acentos quebram --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Faz o site respeitar a largura do celular (essencial!) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"viewport"</span> <span class="attr">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Título que aparece na aba do navegador --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Minha Loja Online<span class="tag">&lt;/title&gt;</span>
+
+  <span class="cmt">&lt;!-- Descrição que aparece no Google --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"description"</span> <span class="attr">content</span>=<span class="str">"Loja de roupas com entrega rápida"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Ícone da aba (favicon) --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"icon"</span> <span class="attr">href</span>=<span class="str">"favicon.png"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- CSS de um arquivo separado --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"estilo.css"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- OU CSS direto aqui dentro (mais rápido pra testar) --&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+    <span class="fn">body</span> { <span class="attr">font-family</span>: <span class="str">sans-serif</span>; <span class="attr">margin</span>: 0; }
+  <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+    </div>
+
+    <p><b>Regra prática:</b> CSS pequeno (uma página só) → dentro de <code>&lt;style&gt;</code> no head. CSS grande (site com várias páginas) → arquivo <code>.css</code> separado com <code>&lt;link&gt;</code>.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="modo-escuro">
+    <span class="step-num">02</span>
+    <h2>Sistema de modo escuro (o que você está usando agora)</h2>
+    <p>Três peças: variáveis CSS pra cor, um atributo no HTML que troca o tema, e JavaScript pra alternar e lembrar a escolha. Esse site inteiro usa exatamente esse sistema — clique no botão lá em cima pra ver.</p>
+
+    <div class="code-window featured">
+      <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">tema.css</span><span class="spacer"></span><button class="copy-btn" data-copy-target="cp-css">📋 Copiar</button></div>
+      <pre id="cp-css"><span class="fn">:root</span> {
+  <span class="attr">--bg</span>: <span class="str">#fafaf9</span>;
+  <span class="attr">--text</span>: <span class="str">#1c1c1c</span>;
+  <span class="attr">--accent</span>: <span class="str">#2563eb</span>;
+}
+
+<span class="cmt">/* Quando o HTML tiver data-theme="dark", troca os valores */</span>
+<span class="fn">[data-theme="dark"]</span> {
+  <span class="attr">--bg</span>: <span class="str">#14161a</span>;
+  <span class="attr">--text</span>: <span class="str">#e8e6e1</span>;
+  <span class="attr">--accent</span>: <span class="str">#6ea8fe</span>;
+}
+
+<span class="fn">body</span> {
+  <span class="attr">background</span>: <span class="kw">var</span>(--bg);
+  <span class="attr">color</span>: <span class="kw">var</span>(--text);
+}</pre>
+    </div>
+
+    <div class="code-window featured">
+      <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">tema.js</span><span class="spacer"></span><button class="copy-btn" data-copy-target="cp-js">📋 Copiar</button></div>
+      <pre id="cp-js"><span class="kw">const</span> btn = <span class="fn">document.getElementById</span>(<span class="str">'theme-toggle'</span>);
+<span class="kw">const</span> root = document.documentElement;
+
+<span class="cmt">// Ao carregar a página, recupera o tema salvo (ou usa o do sistema)</span>
+<span class="kw">const</span> salvo = <span class="fn">localStorage.getItem</span>(<span class="str">'tema'</span>);
+<span class="kw">const</span> prefereEscuro = <span class="fn">window.matchMedia</span>(<span class="str">'(prefers-color-scheme: dark)'</span>).matches;
+<span class="kw">if</span> (salvo === <span class="str">'dark'</span> || (!salvo &amp;&amp; prefereEscuro)) {
+  root.<span class="fn">setAttribute</span>(<span class="str">'data-theme'</span>, <span class="str">'dark'</span>);
+}
+
+btn.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="kw">=&gt;</span> {
+  <span class="kw">const</span> escuroAtivo = root.<span class="fn">getAttribute</span>(<span class="str">'data-theme'</span>) === <span class="str">'dark'</span>;
+  <span class="kw">if</span> (escuroAtivo) {
+    root.<span class="fn">removeAttribute</span>(<span class="str">'data-theme'</span>);
+    <span class="fn">localStorage.setItem</span>(<span class="str">'tema'</span>, <span class="str">'light'</span>);
+  } <span class="kw">else</span> {
+    root.<span class="fn">setAttribute</span>(<span class="str">'data-theme'</span>, <span class="str">'dark'</span>);
+    <span class="fn">localStorage.setItem</span>(<span class="str">'tema'</span>, <span class="str">'dark'</span>);
+  }
+});</pre>
+    </div>
+    <p>Copie essas três partes pra qualquer site e você já tem modo escuro funcionando de verdade, com a escolha salva mesmo se o usuário fechar o navegador.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="atalhos">
+    <span class="step-num">03</span>
+    <h2>Atalhos que aceleram muito o código</h2>
+    <p>A maioria funciona no VS Code (editor gratuito e padrão do mercado).</p>
+
+    <table class="shortcuts">
+      <tr><th>Atalho</th><th>O que faz</th></tr>
+      <tr><td><span class="kbd">!</span> + <span class="kbd">Tab</span></td><td>Gera o esqueleto completo de HTML (Emmet) — DOCTYPE, html, head, body, tudo de uma vez.</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">/</span></td><td>Comenta/descomenta a linha atual.</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">D</span></td><td>Seleciona a próxima ocorrência da palavra.</td></tr>
+      <tr><td><span class="kbd">Alt</span>+<span class="kbd">↑/↓</span></td><td>Move a linha inteira pra cima ou pra baixo.</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">K</span></td><td>Apaga a linha inteira.</td></tr>
+      <tr><td><span class="kbd">div.card</span> + <span class="kbd">Tab</span></td><td>Emmet: cria <code>&lt;div class="card"&gt;&lt;/div&gt;</code> sem digitar as tags.</td></tr>
+      <tr><td><span class="kbd">ul&gt;li*5</span> + <span class="kbd">Tab</span></td><td>Emmet: cria uma lista com 5 itens de uma vez.</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">P</span></td><td>Abre qualquer arquivo do projeto digitando o nome.</td></tr>
+      <tr><td>Extensão "Live Server"</td><td>Atualiza o navegador sozinho toda vez que você salva — economiza centenas de F5.</td></tr>
+    </table>
+
+    <div class="snippet">
+      <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">terminal</span></div>
+      <pre><span class="cmt"># 1. cria a pasta do projeto</span>
+<span class="fn">mkdir</span> meu-site &amp;&amp; <span class="fn">cd</span> meu-site
+
+<span class="cmt"># 2. cria o arquivo principal</span>
+<span class="fn">touch</span> index.html
+
+<span class="cmt"># 3. abre no VS Code</span>
+<span class="fn">code</span> .
+
+<span class="cmt"># 4. dentro do index.html, digite ! e aperte Tab
+# isso gera todo o esqueleto do passo 01 automaticamente</span></pre>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="ias">
+    <span class="step-num">04</span>
+    <h2>Usando IA pra programar mais rápido</h2>
+    <p>IA não substitui entender o código — mas acelera escrever, corrigir erros e aprender. Ajuste os prompts abaixo pro seu projeto real.</p>
+
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-head"><h3>ChatGPT</h3><a class="go" href="https://chat.openai.com" target="_blank" rel="noopener">abrir chat.openai.com ↗</a></div>
+        <p style="margin-top:8px; color:var(--text-dim); font-size:14px;">Bom pra explicações passo a passo e código já formatado em blocos.</p>
+        <div class="prompt-list">
+          <div class="prompt">"Crie o HTML e CSS de uma landing page para [seu negócio], com modo escuro, seção hero, 3 cards de serviço e um formulário de contato. Explique cada parte do código."</div>
+          <div class="prompt">"Aqui está meu código HTML: [colar código]. Está com um erro de layout no celular. Corrija e explique o que estava errado."</div>
+          <div class="prompt">"Explique linha por linha o que esse CSS faz: [colar CSS]"</div>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-head"><h3>Grok</h3><a class="go" href="https://grok.com" target="_blank" rel="noopener">abrir grok.com ↗</a></div>
+        <p style="margin-top:8px; color:var(--text-dim); font-size:14px;">Boa opção integrada ao X, útil pra iterar rápido em variações de design.</p>
+        <div class="prompt-list">
+          <div class="prompt">"Gere 3 variações de paleta de cores em CSS (--bg, --text, --accent) para um site de [tipo de negócio], modo claro e escuro para cada uma."</div>
+          <div class="prompt">"Transforme este HTML estático em responsivo com CSS Grid, mantendo a mesma estrutura: [colar código]"</div>
+          <div class="prompt">"Liste erros de acessibilidade neste HTML e como corrigir: [colar código]"</div>
+        </div>
+      </div>
+    </div>
+    <p><b>Dica prática:</b> sempre cole o código real (não descreva de memória) e diga o comportamento exato esperado. Prompts vagos geram respostas vagas.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="bases">
+    <span class="step-num">05</span>
+    <h2>Bases completas — código inteiro embutido aqui</h2>
+    <p>Nada de baixar arquivo separado: o código-fonte completo de cada site está embutido nesta página. Clique em "Código" pra ver linha por linha (com botão de copiar), ou "Preview ao vivo" pra ver o site rodando de verdade, dentro de um iframe.</p>
+
+    <!-- LANDING PAGE -->
+    <div class="base-block" id="base-landing">
+      <div class="base-head"><h3>1. Landing Page — NovaFit</h3><span class="lines-badge" id="lines-landing">carregando…</span></div>
+      <p class="base-desc">Página de vendas: hero, estatísticas, recursos, depoimentos, planos de preço e formulário — com o mesmo sistema de modo escuro do curso.</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-panel="landing-code">Código</button>
+        <button class="tab-btn" data-panel="landing-preview">Preview ao vivo</button>
+      </div>
+      <div class="base-panel active" id="landing-code">
+        <div class="code-full-window">
+          <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">base-1-landing-page.html</span><span class="spacer"></span><button class="copy-btn" data-copy-raw="landing">📋 Copiar código completo</button></div>
+          <pre><code id="code-landing"></code></pre>
+        </div>
+      </div>
+      <div class="base-panel" id="landing-preview">
+        <div class="preview-frame-wrap">
+          <iframe id="frame-landing" title="Preview landing page"></iframe>
+          <div class="preview-note">Preview real, renderizado ao vivo dentro desta página (iframe). Interaja normalmente — inclusive o botão de modo escuro do template.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="base-block" id="base-portfolio">
+      <div class="base-head"><h3>2. Portfólio — Ana Ribeiro</h3><span class="lines-badge" id="lines-portfolio">carregando…</span></div>
+      <p class="base-desc">Site pessoal com galeria de projetos filtrável em JavaScript puro (sem biblioteca), seção de habilidades e contato.</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-panel="portfolio-code">Código</button>
+        <button class="tab-btn" data-panel="portfolio-preview">Preview ao vivo</button>
+      </div>
+      <div class="base-panel active" id="portfolio-code">
+        <div class="code-full-window">
+          <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">base-2-portfolio.html</span><span class="spacer"></span><button class="copy-btn" data-copy-raw="portfolio">📋 Copiar código completo</button></div>
+          <pre><code id="code-portfolio"></code></pre>
+        </div>
+      </div>
+      <div class="base-panel" id="portfolio-preview">
+        <div class="preview-frame-wrap">
+          <iframe id="frame-portfolio" title="Preview portfólio"></iframe>
+          <div class="preview-note">Teste os filtros de projeto ("Sites", "Apps", "Branding") direto aqui dentro.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOG -->
+    <div class="base-block" id="base-blog">
+      <div class="base-head"><h3>3. Blog — Ponto Fixo</h3><span class="lines-badge" id="lines-blog">carregando…</span></div>
+      <p class="base-desc">Layout de blog com post em destaque, lista de artigos, sidebar de categorias, tags e newsletter.</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-panel="blog-code">Código</button>
+        <button class="tab-btn" data-panel="blog-preview">Preview ao vivo</button>
+      </div>
+      <div class="base-panel active" id="blog-code">
+        <div class="code-full-window">
+          <div class="bar"><span class="dot3 r"></span><span class="dot3 y"></span><span class="dot3 g"></span><span class="name">base-3-blog.html</span><span class="spacer"></span><button class="copy-btn" data-copy-raw="blog">📋 Copiar código completo</button></div>
+          <pre><code id="code-blog"></code></pre>
+        </div>
+      </div>
+      <div class="base-panel" id="blog-preview">
+        <div class="preview-frame-wrap">
+          <iframe id="frame-blog" title="Preview blog"></iframe>
+          <div class="preview-note">Layout completo renderizado ao vivo, com seu próprio botão de modo escuro independente.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div> <!-- fim da trilha "Código real" -->
+
+  <!-- ===================== TRILHA: NO-CODE COM IA ===================== -->
+  <div class="master-panel" id="trilha-nocode">
+
+    <section class="spotlight" style="border-top:none; margin-top:0;">
+      <div class="spot-inner">
+        <span class="spot-badge">🤖 Sem escrever uma linha de código</span>
+        <h2>Descreva o site que você quer. A IA constrói — e publica.</h2>
+        <p>Ferramentas de "no-code com IA" funcionam assim: você escreve um prompt em português normal descrevendo o site, a IA gera o HTML/CSS/JS (ou um projeto completo) na hora, mostra o preview ao vivo, e você refina pedindo ajustes — tudo em chat, sem editor de código.</p>
+
+        <div class="nocode-flow">
+          <div class="flow-step"><span class="fs-num">01</span><h4>Escreva o prompt</h4><p>Descreva o site: público, seções, estilo visual, cores.</p></div>
+          <div class="flow-step"><span class="fs-num">02</span><h4>A IA gera</h4><p>Em segundos aparece um preview do site já funcionando.</p></div>
+          <div class="flow-step"><span class="fs-num">03</span><h4>Você refina</h4><p>Peça ajustes por chat: "troque a cor", "adicione uma seção de preços".</p></div>
+          <div class="flow-step"><span class="fs-num">04</span><h4>Publica</h4><p>Um clique gera um link público — o site já está no ar.</p></div>
+        </div>
+
+        <div class="vs-row">
+          <span class="vs-pill"><b>No-code</b> → mais rápido pra validar uma ideia</span>
+          <span class="vs-pill"><b>Código real</b> → mais controle e nada de custo mensal obrigatório</span>
+          <span class="vs-pill">Muita gente combina os dois: gera com IA e depois ajusta o código à mão</span>
+        </div>
+
+        <div class="nocode-grid">
+          <div class="nocode-card">
+            <div class="nc-head"><h3>v0</h3><span class="nc-tag">Vercel</span></div>
+            <p class="nc-desc">Gera interfaces completas em React a partir de descrição em texto ou até print de referência. Ótimo pra layouts modernos.</p>
+            <div class="prompt">"Crie uma landing page para uma cafeteria de bairro, com hero, cardápio em cards e seção de localização. Estilo aconchegante, tons terrosos."</div>
+            <a class="go" href="https://v0.dev" target="_blank" rel="noopener">abrir v0.dev ↗</a>
+          </div>
+
+          <div class="nocode-card">
+            <div class="nc-head"><h3>bolt.new</h3><span class="nc-tag">StackBlitz</span></div>
+            <p class="nc-desc">Gera o projeto inteiro (front e back) e roda direto no navegador, sem instalar nada. Dá pra ver e editar o código gerado.</p>
+            <div class="prompt">"Crie um site de portfólio com página inicial, lista de projetos e formulário de contato funcional. Modo escuro incluso."</div>
+            <a class="go" href="https://bolt.new" target="_blank" rel="noopener">abrir bolt.new ↗</a>
+          </div>
+
+          <div class="nocode-card">
+            <div class="nc-head"><h3>Lovable</h3><span class="nc-tag">lovable.dev</span></div>
+            <p class="nc-desc">Focado em criar produtos completos (não só landing pages) via chat, incluindo lógica e banco de dados.</p>
+            <div class="prompt">"Crie um app web simples de lista de tarefas, com login, onde cada usuário só vê suas próprias tarefas."</div>
+            <a class="go" href="https://lovable.dev" target="_blank" rel="noopener">abrir lovable.dev ↗</a>
+          </div>
+
+          <div class="nocode-card">
+            <div class="nc-head"><h3>Framer AI</h3><span class="nc-tag">framer.com</span></div>
+            <p class="nc-desc">Gera o site já dentro de um editor visual de arrastar-e-soltar — bom pra quem quer ajustar detalhes sem código depois.</p>
+            <div class="prompt">"Gere um site de uma página para um fotógrafo de casamentos, com galeria em grade e depoimentos de clientes."</div>
+            <a class="go" href="https://www.framer.com/ai" target="_blank" rel="noopener">abrir framer.com/ai ↗</a>
+          </div>
+
+          <div class="nocode-card">
+            <div class="nc-head"><h3>Wix ADI / IA</h3><span class="nc-tag">wix.com</span></div>
+            <p class="nc-desc">Responde um pequeno questionário (tipo de negócio, estilo) e monta um site pronto pra editar visualmente, com hospedagem inclusa.</p>
+            <div class="prompt">Não usa prompt livre — você responde perguntas guiadas: tipo de negócio, nome, cores preferidas, se precisa de loja online.</div>
+            <a class="go" href="https://www.wix.com/ai-website-builder" target="_blank" rel="noopener">abrir wix.com ↗</a>
+          </div>
+
+          <div class="nocode-card">
+            <div class="nc-head"><h3>Webflow AI</h3><span class="nc-tag">webflow.com</span></div>
+            <p class="nc-desc">Gera a estrutura inicial do site dentro do editor visual do Webflow, com mais controle de design profissional depois.</p>
+            <div class="prompt">"Crie a estrutura de um site institucional para uma clínica odontológica: início, serviços, equipe e agendamento."</div>
+            <a class="go" href="https://webflow.com" target="_blank" rel="noopener">abrir webflow.com ↗</a>
+          </div>
+        </div>
+
+        <div class="nocode-note">
+          <b>Quando escolher no-code:</b> validar uma ideia rápido, criar um site pra alguém que não vai mexer no código depois, ou prototipar antes de codar à mão.<br>
+          <b>Quando escolher código real:</b> quando você quer controle total, performance máxima, zero dependência de plataforma, ou está aprendendo a programar de verdade — nesse caso, use a trilha <a href="#" onclick="document.getElementById('tab-trilha-code').click(); return false;">Código real</a> ao lado.
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- fim da trilha "No-code com IA" -->
+
+</main>
+
+<footer>Curso feito com HTML, CSS e JavaScript puro — sem frameworks, tudo numa página só.</footer>
+
+<script>
+  /* ---------- Abas principais: Código real / No-code com IA ---------- */
+  (function(){
+    const tabs = document.querySelectorAll('.master-tab');
+    tabs.forEach(function(t){
+      t.addEventListener('click', function(){
+        tabs.forEach(function(x){ x.classList.remove('active'); });
+        t.classList.add('active');
+        document.querySelectorAll('.master-panel').forEach(function(p){ p.classList.remove('active'); });
+        document.getElementById(t.getAttribute('data-master')).classList.add('active');
+      });
+    });
+    // Links do menu superior também ativam a trilha certa antes de rolar até a seção
+    document.querySelectorAll('nav.top-nav a').forEach(function(a){
+      a.addEventListener('click', function(){
+        const href = a.getAttribute('href');
+        if (href === '#trilha-nocode'){
+          document.getElementById('tab-trilha-nocode').click();
+        } else {
+          document.getElementById('tab-trilha-code').click();
+        }
+      });
+    });
+  })();
+
+  /* ---------- Modo escuro do curso ---------- */
+  (function(){
+    const btn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-icon');
+    const label = document.getElementById('theme-label');
+    const root = document.documentElement;
+    function aplicarLabel(ativo){ icon.textContent = ativo ? '☀️' : '🌙'; label.textContent = ativo ? 'Modo claro' : 'Modo escuro'; }
+    const salvo = localStorage.getItem('curso-tema');
+    const prefereEscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const iniciaEscuro = salvo === 'dark' || (!salvo && prefereEscuro);
+    if (iniciaEscuro){ root.setAttribute('data-theme','dark'); }
+    aplicarLabel(iniciaEscuro);
+    btn.addEventListener('click', function(){
+      const escuroAtivo = root.getAttribute('data-theme') === 'dark';
+      if (escuroAtivo){ root.removeAttribute('data-theme'); localStorage.setItem('curso-tema','light'); aplicarLabel(false); }
+      else { root.setAttribute('data-theme','dark'); localStorage.setItem('curso-tema','dark'); aplicarLabel(true); }
+    });
+  })();
+
+  /* ---------- Copiar blocos de código manuais (snippets do curso) ---------- */
+  document.querySelectorAll('.copy-btn[data-copy-target]').forEach(function(b){
+    b.addEventListener('click', function(){
+      const el = document.getElementById(b.getAttribute('data-copy-target'));
+      navigator.clipboard.writeText(el.innerText).then(function(){
+        b.textContent = '✅ Copiado!'; b.classList.add('copied');
+        setTimeout(function(){ b.textContent = '📋 Copiar'; b.classList.remove('copied'); }, 1800);
+      });
+    });
+  });
+
+  /* ---------- Tabs (Código / Preview) ---------- */
+  document.querySelectorAll('.base-block').forEach(function(block){
+    const tabs = block.querySelectorAll('.tab-btn');
+    tabs.forEach(function(t){
+      t.addEventListener('click', function(){
+        tabs.forEach(function(x){ x.classList.remove('active'); });
+        t.classList.add('active');
+        block.querySelectorAll('.base-panel').forEach(function(p){ p.classList.remove('active'); });
+        document.getElementById(t.getAttribute('data-panel')).classList.add('active');
+      });
+    });
+  });
+
+  /* ---------- Realce de sintaxe leve, reaproveitado nos códigos completos ---------- */
+  function highlight(escaped){
+    const re = /(&lt;!--[\s\S]*?--&gt;|\/\*[\s\S]*?\*\/|\/\/.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|&lt;\/?[a-zA-Z][\w-]*|&gt;|\b[a-zA-Z-]+(?=\s*=))/g;
+    return escaped.replace(re, function(m){
+      if (m.indexOf('&lt;!--') === 0) return '<span class="cmt">'+m+'</span>';
+      if (m.indexOf('/*') === 0 || m.indexOf('//') === 0) return '<span class="cmt">'+m+'</span>';
+      if (m[0] === '"' || m[0] === "'") return '<span class="str">'+m+'</span>';
+      if (m.indexOf('&lt;') === 0) return '<span class="tag">'+m+'</span>';
+      if (m === '&gt;') return '<span class="tag">'+m+'</span>';
+      return '<span class="attr">'+m+'</span>';
+    });
+  }
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function comLinhas(html){
+    return html.split('\n').map(function(linha, i){
+      return '<span class="ln">'+(i+1)+'</span>'+linha;
+    }).join('\n');
+  }
+
+  /* ---------- Bases embutidas (base64 -> texto real -> código + preview) ---------- */
+  const BASES = {
+    landing:   { b64: "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+Tm92YUZpdCDigJQgTGFuZGluZyBQYWdlPC90aXRsZT4KPG1ldGEgbmFtZT0iZGVzY3JpcHRpb24iIGNvbnRlbnQ9IkxhbmRpbmcgcGFnZSBkZSBleGVtcGxvIHBhcmEgYWNhZGVtaWEvc2VydmnDp28sIGNvbSBtb2RvIGVzY3Vyby4iPgo8bGluayByZWw9InByZWNvbm5lY3QiIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20iPgo8bGluayBocmVmPSJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PVNwYWNlK0dyb3Rlc2s6d2dodEA0MDA7NTAwOzYwMDs3MDAmZmFtaWx5PUludGVyOndnaHRANDAwOzUwMDs2MDAmZGlzcGxheT1zd2FwIiByZWw9InN0eWxlc2hlZXQiPgo8c3R5bGU+CiAgOnJvb3R7CiAgICAtLWJnOiNmZmZmZmY7IC0tYmctYWx0OiNmNmY3ZjU7IC0tY2FyZDojZmZmZmZmOyAtLXRleHQ6IzE2MTYxNjsgLS10ZXh0LWRpbTojNWM1ZjVhOwogICAgLS1ib3JkZXI6I2U2ZTZlMjsgLS1hY2NlbnQ6IzFmNmY0YzsgLS1hY2NlbnQtMjojZTBiMzRjOyAtLXNoYWRvdzowIDEwcHggMzBweCByZ2JhKDAsMCwwLC4wNik7CiAgICAtLXJhZGl1czoxNHB4OyAtLWZvbnQ6J0ludGVyJyxzeXN0ZW0tdWksc2Fucy1zZXJpZjsgLS1mb250LWQ6J1NwYWNlIEdyb3Rlc2snLHNhbnMtc2VyaWY7CiAgfQogIFtkYXRhLXRoZW1lPSJkYXJrIl17CiAgICAtLWJnOiMxMTEzMTA7IC0tYmctYWx0OiMxNzFhMTY7IC0tY2FyZDojMWExZDE5OyAtLXRleHQ6I2VjZWFlNDsgLS10ZXh0LWRpbTojYTJhODllOwogICAgLS1ib3JkZXI6IzJhMmUyODsgLS1hY2NlbnQ6IzRmZDE5NjsgLS1hY2NlbnQtMjojZjBjODY5OyAtLXNoYWRvdzowIDEwcHggNDBweCByZ2JhKDAsMCwwLC41KTsKICB9CiAgKnsgYm94LXNpemluZzpib3JkZXItYm94OyBtYXJnaW46MDsgcGFkZGluZzowOyB9CiAgYm9keXsgZm9udC1mYW1pbHk6dmFyKC0tZm9udCk7IGJhY2tncm91bmQ6dmFyKC0tYmcpOyBjb2xvcjp2YXIoLS10ZXh0KTsgbGluZS1oZWlnaHQ6MS42OyB0cmFuc2l0aW9uOi4yNXM7IH0KICBoMSxoMixoM3sgZm9udC1mYW1pbHk6dmFyKC0tZm9udC1kKTsgbGV0dGVyLXNwYWNpbmc6LS4wMmVtOyB9CiAgYXsgY29sb3I6aW5oZXJpdDsgdGV4dC1kZWNvcmF0aW9uOm5vbmU7IH0KICAud3JhcHsgbWF4LXdpZHRoOjExNDBweDsgbWFyZ2luOjAgYXV0bzsgcGFkZGluZzowIDI0cHg7IH0KICBpbWd7IG1heC13aWR0aDoxMDAlOyBkaXNwbGF5OmJsb2NrOyB9CgogIGhlYWRlcnsgcG9zaXRpb246c3RpY2t5OyB0b3A6MDsgei1pbmRleDo0MDsgYmFja2dyb3VuZDpjb2xvci1taXgoaW4gc3JnYiwgdmFyKC0tYmcpIDg1JSwgdHJhbnNwYXJlbnQpOyBiYWNrZHJvcC1maWx0ZXI6Ymx1cigxMHB4KTsgYm9yZGVyLWJvdHRvbToxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgfQogIC5uYXZ7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsgcGFkZGluZzoxNnB4IDA7IH0KICAubG9nb3sgZm9udC1mYW1pbHk6dmFyKC0tZm9udC1kKTsgZm9udC13ZWlnaHQ6NzAwOyBmb250LXNpemU6MTlweDsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDo4cHg7IH0KICAubG9nbyBzcGFueyB3aWR0aDo5cHg7IGhlaWdodDo5cHg7IGJhY2tncm91bmQ6dmFyKC0tYWNjZW50KTsgYm9yZGVyLXJhZGl1czo1MCU7IH0KICAubmF2IHVseyBkaXNwbGF5OmZsZXg7IGdhcDoyOHB4OyBsaXN0LXN0eWxlOm5vbmU7IGZvbnQtc2l6ZToxNC41cHg7IH0KICAubmF2IHVsIGE6aG92ZXJ7IGNvbG9yOnZhcigtLWFjY2VudCk7IH0KICAubmF2LWFjdGlvbnN7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBnYXA6MTJweDsgfQogIC5idG57IHBhZGRpbmc6MTBweCAyMHB4OyBib3JkZXItcmFkaXVzOjk5OXB4OyBmb250LXNpemU6MTRweDsgZm9udC13ZWlnaHQ6NjAwOyBib3JkZXI6MXB4IHNvbGlkIHRyYW5zcGFyZW50OyBjdXJzb3I6cG9pbnRlcjsgfQogIC5idG4tcHJpbWFyeXsgYmFja2dyb3VuZDp2YXIoLS1hY2NlbnQpOyBjb2xvcjojZmZmOyB9CiAgLmJ0bi1wcmltYXJ5OmhvdmVyeyBvcGFjaXR5Oi45OyB9CiAgLmJ0bi1naG9zdHsgYm9yZGVyLWNvbG9yOnZhcigtLWJvcmRlcik7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IH0KICAjdGhlbWUtdG9nZ2xleyB3aWR0aDozOHB4OyBoZWlnaHQ6MzhweDsgYm9yZGVyLXJhZGl1czo1MCU7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgY3Vyc29yOnBvaW50ZXI7IGZvbnQtc2l6ZToxNnB4OyB9CgogIC5oZXJveyBwYWRkaW5nOjkwcHggMCA3MHB4OyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczoxLjFmciAuOWZyOyBnYXA6NTBweDsgYWxpZ24taXRlbXM6Y2VudGVyOyB9CiAgLmV5ZWJyb3d7IGRpc3BsYXk6aW5saW5lLWJsb2NrOyBmb250LXNpemU6MTIuNXB4OyBjb2xvcjp2YXIoLS1hY2NlbnQpOyBiYWNrZ3JvdW5kOmNvbG9yLW1peChpbiBzcmdiLCB2YXIoLS1hY2NlbnQpIDEyJSwgdHJhbnNwYXJlbnQpOyBwYWRkaW5nOjVweCAxMnB4OyBib3JkZXItcmFkaXVzOjk5OXB4OyBtYXJnaW4tYm90dG9tOjE4cHg7IGZvbnQtd2VpZ2h0OjYwMDsgfQogIC5oZXJvIGgxeyBmb250LXNpemU6Y2xhbXAoMzRweCw0LjV2dyw1NHB4KTsgbGluZS1oZWlnaHQ6MS4wODsgfQogIC5oZXJvIGgxIC5hY2NlbnR7IGNvbG9yOnZhcigtLWFjY2VudCk7IH0KICAuaGVybyBweyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IG1hcmdpbi10b3A6MThweDsgbWF4LXdpZHRoOjQ2MHB4OyBmb250LXNpemU6MTYuNXB4OyB9CiAgLmhlcm8tYWN0aW9uc3sgZGlzcGxheTpmbGV4OyBnYXA6MTRweDsgbWFyZ2luLXRvcDozMHB4OyB9CiAgLmhlcm8tdmlzdWFseyBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxNDVkZWcsIHZhcigtLWFjY2VudCksIHZhcigtLWFjY2VudC0yKSk7IGJvcmRlci1yYWRpdXM6MjRweDsgYXNwZWN0LXJhdGlvOjQvMy4yOyBib3gtc2hhZG93OnZhcigtLXNoYWRvdyk7IH0KCiAgLnN0YXRzeyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoNCwxZnIpOyBnYXA6MjBweDsgcGFkZGluZzo0MHB4IDA7IGJvcmRlci10b3A6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1ib3R0b206MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IH0KICAuc3RhdCBieyBmb250LWZhbWlseTp2YXIoLS1mb250LWQpOyBmb250LXNpemU6MzBweDsgZGlzcGxheTpibG9jazsgfQogIC5zdGF0IHNwYW57IGNvbG9yOnZhcigtLXRleHQtZGltKTsgZm9udC1zaXplOjEzLjVweDsgfQoKICBzZWN0aW9uLmZlYXRzeyBwYWRkaW5nOjgwcHggMDsgfQogIC5zZWN0aW9uLWhlYWR7IG1heC13aWR0aDo1NjBweDsgbWFyZ2luLWJvdHRvbTo0NHB4OyB9CiAgLnNlY3Rpb24taGVhZCAua2lja2VyeyBjb2xvcjp2YXIoLS1hY2NlbnQpOyBmb250LXNpemU6MTNweDsgZm9udC13ZWlnaHQ6NzAwOyB0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7IGxldHRlci1zcGFjaW5nOi4wNmVtOyB9CiAgLnNlY3Rpb24taGVhZCBoMnsgZm9udC1zaXplOjMycHg7IG1hcmdpbi10b3A6MTBweDsgfQogIC5zZWN0aW9uLWhlYWQgcHsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBtYXJnaW4tdG9wOjEycHg7IH0KICAuZmVhdC1ncmlkeyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoMywxZnIpOyBnYXA6MjJweDsgfQogIC5mZWF0LWNhcmR7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVyLXJhZGl1czp2YXIoLS1yYWRpdXMpOyBwYWRkaW5nOjI2cHg7IGJveC1zaGFkb3c6dmFyKC0tc2hhZG93KTsgfQogIC5mZWF0LWljb257IHdpZHRoOjQ0cHg7IGhlaWdodDo0NHB4OyBib3JkZXItcmFkaXVzOjEycHg7IGJhY2tncm91bmQ6Y29sb3ItbWl4KGluIHNyZ2IsIHZhcigtLWFjY2VudCkgMTQlLCB0cmFuc3BhcmVudCk7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyOyBmb250LXNpemU6MjBweDsgbWFyZ2luLWJvdHRvbToxNnB4OyB9CiAgLmZlYXQtY2FyZCBoM3sgZm9udC1zaXplOjE3cHg7IG1hcmdpbi1ib3R0b206OHB4OyB9CiAgLmZlYXQtY2FyZCBweyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IGZvbnQtc2l6ZToxNC41cHg7IH0KCiAgc2VjdGlvbi50ZXN0aW1vbmlhbHN7IHBhZGRpbmc6ODBweCAwOyBiYWNrZ3JvdW5kOnZhcigtLWJnLWFsdCk7IH0KICAudHN0LWdyaWR7IGRpc3BsYXk6Z3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCgzLDFmcik7IGdhcDoyMnB4OyB9CiAgLnRzdC1jYXJkeyBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6dmFyKC0tcmFkaXVzKTsgcGFkZGluZzoyNHB4OyB9CiAgLnRzdC1jYXJkIHB7IGZvbnQtc2l6ZToxNC41cHg7IGNvbG9yOnZhcigtLXRleHQtZGltKTsgfQogIC50c3Qtd2hveyBkaXNwbGF5OmZsZXg7IGFsaWduLWl0ZW1zOmNlbnRlcjsgZ2FwOjEwcHg7IG1hcmdpbi10b3A6MTZweDsgfQogIC5hdmF0YXJ7IHdpZHRoOjM2cHg7IGhlaWdodDozNnB4OyBib3JkZXItcmFkaXVzOjUwJTsgYmFja2dyb3VuZDpsaW5lYXItZ3JhZGllbnQoMTQ1ZGVnLHZhcigtLWFjY2VudCksdmFyKC0tYWNjZW50LTIpKTsgfQogIC50c3Qtd2hvIGJ7IGZvbnQtc2l6ZToxMy41cHg7IGRpc3BsYXk6YmxvY2s7IH0KICAudHN0LXdobyBzcGFueyBmb250LXNpemU6MTJweDsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyB9CgogIHNlY3Rpb24ucHJpY2luZ3sgcGFkZGluZzo4MHB4IDA7IH0KICAucHJpY2UtZ3JpZHsgZGlzcGxheTpncmlkOyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6cmVwZWF0KDMsMWZyKTsgZ2FwOjIycHg7IH0KICAucHJpY2UtY2FyZHsgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBib3JkZXItcmFkaXVzOnZhcigtLXJhZGl1cyk7IHBhZGRpbmc6MzBweDsgdGV4dC1hbGlnbjpjZW50ZXI7IH0KICAucHJpY2UtY2FyZC5oaWdobGlnaHR7IGJvcmRlci1jb2xvcjp2YXIoLS1hY2NlbnQpOyBib3gtc2hhZG93OnZhcigtLXNoYWRvdyk7IHRyYW5zZm9ybTp0cmFuc2xhdGVZKC04cHgpOyB9CiAgLnByaWNlLWNhcmQgaDN7IGZvbnQtc2l6ZToxNnB4OyB0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7IGxldHRlci1zcGFjaW5nOi4wNWVtOyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IH0KICAucHJpY2UtY2FyZCAuYW1vdW50eyBmb250LWZhbWlseTp2YXIoLS1mb250LWQpOyBmb250LXNpemU6NDBweDsgbWFyZ2luOjE0cHggMDsgfQogIC5wcmljZS1jYXJkIC5hbW91bnQgc3BhbnsgZm9udC1zaXplOjE0cHg7IGNvbG9yOnZhcigtLXRleHQtZGltKTsgZm9udC1mYW1pbHk6dmFyKC0tZm9udCk7IH0KICAucHJpY2UtY2FyZCB1bHsgbGlzdC1zdHlsZTpub25lOyB0ZXh0LWFsaWduOmxlZnQ7IG1hcmdpbjoyMHB4IDA7IGZvbnQtc2l6ZToxNHB4OyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IH0KICAucHJpY2UtY2FyZCBsaXsgcGFkZGluZzo2cHggMDsgfQogIC5wcmljZS1jYXJkIGxpOmJlZm9yZXsgY29udGVudDoi4pyTICI7IGNvbG9yOnZhcigtLWFjY2VudCk7IGZvbnQtd2VpZ2h0OjcwMDsgfQoKICBzZWN0aW9uLmN0YS1maW5hbHsgcGFkZGluZzo4MHB4IDA7IHRleHQtYWxpZ246Y2VudGVyOyB9CiAgLmN0YS1ib3h7IGJhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDE0NWRlZywgdmFyKC0tYWNjZW50KSwgY29sb3ItbWl4KGluIHNyZ2IsIHZhcigtLWFjY2VudCkgNjAlLCB2YXIoLS1hY2NlbnQtMikpKTsgYm9yZGVyLXJhZGl1czoyNHB4OyBwYWRkaW5nOjYwcHggNDBweDsgY29sb3I6I2ZmZjsgfQogIC5jdGEtYm94IGgyeyBmb250LXNpemU6MzBweDsgfQogIC5jdGEtYm94IHB7IG9wYWNpdHk6Ljk7IG1hcmdpbi10b3A6MTJweDsgfQogIC5jdGEtYm94IC5idG4tcHJpbWFyeXsgYmFja2dyb3VuZDojZmZmOyBjb2xvcjp2YXIoLS1hY2NlbnQpOyBtYXJnaW4tdG9wOjI0cHg7IGRpc3BsYXk6aW5saW5lLWJsb2NrOyB9CgogIGZvcm0uY29udGFjdHsgZGlzcGxheTpncmlkOyBnYXA6MTRweDsgbWF4LXdpZHRoOjQ4MHB4OyBtYXJnaW4tdG9wOjMwcHg7IH0KICBmb3JtLmNvbnRhY3QgaW5wdXQsIGZvcm0uY29udGFjdCB0ZXh0YXJlYXsKICAgIHBhZGRpbmc6MTJweCAxNHB4OyBib3JkZXItcmFkaXVzOjEwcHg7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgY29sb3I6dmFyKC0tdGV4dCk7IGZvbnQtZmFtaWx5OnZhcigtLWZvbnQpOyBmb250LXNpemU6MTRweDsKICB9CiAgZm9ybS5jb250YWN0IHRleHRhcmVheyBtaW4taGVpZ2h0OjEwMHB4OyByZXNpemU6dmVydGljYWw7IH0KCiAgZm9vdGVyeyBib3JkZXItdG9wOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBwYWRkaW5nOjQwcHggMDsgZGlzcGxheTpmbGV4OyBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBmb250LXNpemU6MTNweDsgZmxleC13cmFwOndyYXA7IGdhcDoxMHB4OyB9CgogIEBtZWRpYSAobWF4LXdpZHRoOjg2MHB4KXsKICAgIC5oZXJveyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9CiAgICAuc3RhdHN7IGdyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoMiwxZnIpOyB9CiAgICAuZmVhdC1ncmlkLCAudHN0LWdyaWQsIC5wcmljZS1ncmlkeyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9CiAgICAubmF2IHVseyBkaXNwbGF5Om5vbmU7IH0KICAgIC5wcmljZS1jYXJkLmhpZ2hsaWdodHsgdHJhbnNmb3JtOm5vbmU7IH0KICB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+Cgo8aGVhZGVyPgogIDxkaXYgY2xhc3M9IndyYXAgbmF2Ij4KICAgIDxkaXYgY2xhc3M9ImxvZ28iPjxzcGFuPjwvc3Bhbj5Ob3ZhRml0PC9kaXY+CiAgICA8dWw+CiAgICAgIDxsaT48YSBocmVmPSIjcmVjdXJzb3MiPlJlY3Vyc29zPC9hPjwvbGk+CiAgICAgIDxsaT48YSBocmVmPSIjZGVwb2ltZW50b3MiPkRlcG9pbWVudG9zPC9hPjwvbGk+CiAgICAgIDxsaT48YSBocmVmPSIjcHJlY29zIj5QcmXDp29zPC9hPjwvbGk+CiAgICAgIDxsaT48YSBocmVmPSIjY29udGF0byI+Q29udGF0bzwvYT48L2xpPgogICAgPC91bD4KICAgIDxkaXYgY2xhc3M9Im5hdi1hY3Rpb25zIj4KICAgICAgPGJ1dHRvbiBpZD0idGhlbWUtdG9nZ2xlIiBhcmlhLWxhYmVsPSJBbHRlcm5hciB0ZW1hIj7wn4yZPC9idXR0b24+CiAgICAgIDxidXR0b24gY2xhc3M9ImJ0biBidG4tcHJpbWFyeSI+Q29tZcOnYXIgYWdvcmE8L2J1dHRvbj4KICAgIDwvZGl2PgogIDwvZGl2Pgo8L2hlYWRlcj4KCjxtYWluIGNsYXNzPSJ3cmFwIj4KICA8c2VjdGlvbiBjbGFzcz0iaGVybyI+CiAgICA8ZGl2PgogICAgICA8c3BhbiBjbGFzcz0iZXllYnJvdyI+Tm92byDCtyBQbGFubyBkZSAzMCBkaWFzPC9zcGFuPgogICAgICA8aDE+VHJlaW5lIGNvbSA8c3BhbiBjbGFzcz0iYWNjZW50Ij5jb25zaXN0w6puY2lhPC9zcGFuPiwgbsOjbyBjb20gZm9yw6dhIGRlIHZvbnRhZGUuPC9oMT4KICAgICAgPHA+UGxhbm9zIGRlIHRyZWlubyBhZGFwdGFkb3Mgw6Agc3VhIHJvdGluYSwgYWNvbXBhbmhhbWVudG8gc2VtYW5hbCBlIHVtYSBjb211bmlkYWRlIHF1ZSBuw6NvIHRlIGRlaXhhIGRlc2lzdGlyLjwvcD4KICAgICAgPGRpdiBjbGFzcz0iaGVyby1hY3Rpb25zIj4KICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiPlRlc3RhciBncsOhdGlzIHBvciA3IGRpYXM8L2J1dHRvbj4KICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4gYnRuLWdob3N0Ij5WZXIgY29tbyBmdW5jaW9uYTwvYnV0dG9uPgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0iaGVyby12aXN1YWwiPjwvZGl2PgogIDwvc2VjdGlvbj4KCiAgPHNlY3Rpb24gY2xhc3M9InN0YXRzIj4KICAgIDxkaXYgY2xhc3M9InN0YXQiPjxiPjEyays8L2I+PHNwYW4+QWx1bm9zIGF0aXZvczwvc3Bhbj48L2Rpdj4KICAgIDxkaXYgY2xhc3M9InN0YXQiPjxiPjQuOS81PC9iPjxzcGFuPkF2YWxpYcOnw6NvIG3DqWRpYTwvc3Bhbj48L2Rpdj4KICAgIDxkaXYgY2xhc3M9InN0YXQiPjxiPjg3JTwvYj48c3Bhbj5NYW50w6ptIG8gaMOhYml0byBhcMOzcyAzIG1lc2VzPC9zcGFuPjwvZGl2PgogICAgPGRpdiBjbGFzcz0ic3RhdCI+PGI+MzA8L2I+PHNwYW4+RGlhcyBkZSBnYXJhbnRpYTwvc3Bhbj48L2Rpdj4KICA8L3NlY3Rpb24+CgogIDxzZWN0aW9uIGNsYXNzPSJmZWF0cyIgaWQ9InJlY3Vyc29zIj4KICAgIDxkaXYgY2xhc3M9InNlY3Rpb24taGVhZCI+CiAgICAgIDxzcGFuIGNsYXNzPSJraWNrZXIiPlJlY3Vyc29zPC9zcGFuPgogICAgICA8aDI+VHVkbyBxdWUgdm9jw6ogcHJlY2lzYSwgbnVtIHPDsyBsdWdhcjwvaDI+CiAgICAgIDxwPlNlbSBwbGFuaWxoYXMgc29sdGFzLCBzZW0gYWRpdmluaGHDp8Ojby4gQ2FkYSByZWN1cnNvIGV4aXN0ZSBwcmEgcmVtb3ZlciB1bWEgZGVzY3VscGEgZXNwZWPDrWZpY2EuPC9wPgogICAgPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJmZWF0LWdyaWQiPgogICAgICA8ZGl2IGNsYXNzPSJmZWF0LWNhcmQiPjxkaXYgY2xhc3M9ImZlYXQtaWNvbiI+8J+ThTwvZGl2PjxoMz5QbGFubyBzZW1hbmFsPC9oMz48cD5UcmVpbm9zIG9yZ2FuaXphZG9zIHBvciBkaWEsIGFqdXN0YWRvcyBhdXRvbWF0aWNhbWVudGUgY29uZm9ybWUgc2V1IHByb2dyZXNzby48L3A+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImZlYXQtY2FyZCI+PGRpdiBjbGFzcz0iZmVhdC1pY29uIj7wn5OIPC9kaXY+PGgzPlByb2dyZXNzbyB2aXPDrXZlbDwvaDM+PHA+R3LDoWZpY29zIHNpbXBsZXMgcXVlIG1vc3RyYW0gZXZvbHXDp8OjbyBkZSBjYXJnYSwgZnJlcXXDqm5jaWEgZSBjb25zdMOibmNpYS48L3A+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImZlYXQtY2FyZCI+PGRpdiBjbGFzcz0iZmVhdC1pY29uIj7wn5GlPC9kaXY+PGgzPkNvbXVuaWRhZGU8L2gzPjxwPkdydXBvcyBwZXF1ZW5vcyBjb20gY2hlY2staW4gc2VtYW5hbCDigJQgYWNjb3VudGFiaWxpdHkgZGUgdmVyZGFkZSwgc2VtIHByZXNzw6NvLjwvcD48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iZmVhdC1jYXJkIj48ZGl2IGNsYXNzPSJmZWF0LWljb24iPvCfjqU8L2Rpdj48aDM+VsOtZGVvcyBkZSBleGVjdcOnw6NvPC9oMz48cD5DYWRhIGV4ZXJjw61jaW8gY29tIHbDrWRlbyBjdXJ0byBtb3N0cmFuZG8gYSBmb3JtYSBjb3JyZXRhLjwvcD48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iZmVhdC1jYXJkIj48ZGl2IGNsYXNzPSJmZWF0LWljb24iPvCfjY48L2Rpdj48aDM+R3VpYSBkZSBudXRyacOnw6NvPC9oMz48cD5EaXJldHJpemVzIHNpbXBsZXMsIHNlbSBjb250YWdlbSBvYnNlc3NpdmEgZGUgY2Fsb3JpYXMuPC9wPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJmZWF0LWNhcmQiPjxkaXYgY2xhc3M9ImZlYXQtaWNvbiI+8J+SrDwvZGl2PjxoMz5TdXBvcnRlIGRpcmV0bzwvaDM+PHA+RMO6dmlkYXMgcmVzcG9uZGlkYXMgcG9yIHRyZWluYWRvcmVzIHJlYWlzLCBuw6NvIHPDsyBwb3IgYm90LjwvcD48L2Rpdj4KICAgIDwvZGl2PgogIDwvc2VjdGlvbj4KPC9tYWluPgoKPHNlY3Rpb24gY2xhc3M9InRlc3RpbW9uaWFscyIgaWQ9ImRlcG9pbWVudG9zIj4KICA8ZGl2IGNsYXNzPSJ3cmFwIj4KICAgIDxkaXYgY2xhc3M9InNlY3Rpb24taGVhZCI+CiAgICAgIDxzcGFuIGNsYXNzPSJraWNrZXIiPkRlcG9pbWVudG9zPC9zcGFuPgogICAgICA8aDI+UXVlbSB1c2EsIHJlY29tZW5kYTwvaDI+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9InRzdC1ncmlkIj4KICAgICAgPGRpdiBjbGFzcz0idHN0LWNhcmQiPgogICAgICAgIDxwPiJUcm9xdWVpIDMgYXBwcyBkaWZlcmVudGVzIHBvciBlc3NlLiDDiSBvIHByaW1laXJvIHF1ZSBldSByZWFsbWVudGUgdXNvIHRvZG8gZGlhLiI8L3A+CiAgICAgICAgPGRpdiBjbGFzcz0idHN0LXdobyI+PGRpdiBjbGFzcz0iYXZhdGFyIj48L2Rpdj48ZGl2PjxiPk1hcmluYSBULjwvYj48c3Bhbj51c2EgaMOhIDggbWVzZXM8L3NwYW4+PC9kaXY+PC9kaXY+CiAgICAgIDwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJ0c3QtY2FyZCI+CiAgICAgICAgPHA+Ik8gY2hlY2staW4gc2VtYW5hbCBmb2kgbyBxdWUgbXVkb3UgbyBqb2dvIHByYSBtaW0uIE7Do28gY29uc2lnbyBtYWlzIGZhbHRhci4iPC9wPgogICAgICAgIDxkaXYgY2xhc3M9InRzdC13aG8iPjxkaXYgY2xhc3M9ImF2YXRhciI+PC9kaXY+PGRpdj48Yj5EaWVnbyBBLjwvYj48c3Bhbj51c2EgaMOhIDEgYW5vPC9zcGFuPjwvZGl2PjwvZGl2PgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0idHN0LWNhcmQiPgogICAgICAgIDxwPiJTaW1wbGVzLCBkaXJldG8sIHNlbSBlbnJvbGHDp8Ojby4gRXhhdGFtZW50ZSBvIHF1ZSBldSBwcmVjaXNhdmEuIjwvcD4KICAgICAgICA8ZGl2IGNsYXNzPSJ0c3Qtd2hvIj48ZGl2IGNsYXNzPSJhdmF0YXIiPjwvZGl2PjxkaXY+PGI+Q2FybGEgTS48L2I+PHNwYW4+dXNhIGjDoSA0IG1lc2VzPC9zcGFuPjwvZGl2PjwvZGl2PgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogIDwvZGl2Pgo8L3NlY3Rpb24+Cgo8bWFpbiBjbGFzcz0id3JhcCI+CiAgPHNlY3Rpb24gY2xhc3M9InByaWNpbmciIGlkPSJwcmVjb3MiPgogICAgPGRpdiBjbGFzcz0ic2VjdGlvbi1oZWFkIj4KICAgICAgPHNwYW4gY2xhc3M9ImtpY2tlciI+UHJlw6dvczwvc3Bhbj4KICAgICAgPGgyPkVzY29saGEgc2V1IHBsYW5vPC9oMj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0icHJpY2UtZ3JpZCI+CiAgICAgIDxkaXYgY2xhc3M9InByaWNlLWNhcmQiPgogICAgICAgIDxoMz5Cw6FzaWNvPC9oMz4KICAgICAgICA8ZGl2IGNsYXNzPSJhbW91bnQiPlIkMjk8c3Bhbj4vbcOqczwvc3Bhbj48L2Rpdj4KICAgICAgICA8dWw+PGxpPlBsYW5vIGRlIHRyZWlubyBwYWRyw6NvPC9saT48bGk+VsOtZGVvcyBkZSBleGVjdcOnw6NvPC9saT48bGk+U3Vwb3J0ZSBwb3IgZS1tYWlsPC9saT48L3VsPgogICAgICAgIDxidXR0b24gY2xhc3M9ImJ0biBidG4tZ2hvc3QiIHN0eWxlPSJ3aWR0aDoxMDAlIj5Fc2NvbGhlcjwvYnV0dG9uPgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0icHJpY2UtY2FyZCBoaWdobGlnaHQiPgogICAgICAgIDxoMz5Db21wbGV0bzwvaDM+CiAgICAgICAgPGRpdiBjbGFzcz0iYW1vdW50Ij5SJDU5PHNwYW4+L23DqnM8L3NwYW4+PC9kaXY+CiAgICAgICAgPHVsPjxsaT5QbGFubyBwZXJzb25hbGl6YWRvPC9saT48bGk+Q2hlY2staW4gc2VtYW5hbDwvbGk+PGxpPkNvbXVuaWRhZGUgKyBzdXBvcnRlIGRpcmV0bzwvbGk+PGxpPkd1aWEgZGUgbnV0cmnDp8OjbzwvbGk+PC91bD4KICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiIHN0eWxlPSJ3aWR0aDoxMDAlIj5Fc2NvbGhlcjwvYnV0dG9uPgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0icHJpY2UtY2FyZCI+CiAgICAgICAgPGgzPkVxdWlwZTwvaDM+CiAgICAgICAgPGRpdiBjbGFzcz0iYW1vdW50Ij5SJDE0OTxzcGFuPi9tw6pzPC9zcGFuPjwvZGl2PgogICAgICAgIDx1bD48bGk+QXTDqSA1IHBlc3NvYXM8L2xpPjxsaT5UdWRvIGRvIHBsYW5vIENvbXBsZXRvPC9saT48bGk+UmVsYXTDs3Jpb3MgZW0gZ3J1cG88L2xpPjwvdWw+CiAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnRuIGJ0bi1naG9zdCIgc3R5bGU9IndpZHRoOjEwMCUiPkVzY29saGVyPC9idXR0b24+CiAgICAgIDwvZGl2PgogICAgPC9kaXY+CiAgPC9zZWN0aW9uPgoKICA8c2VjdGlvbiBjbGFzcz0iY3RhLWZpbmFsIiBpZD0iY29udGF0byI+CiAgICA8ZGl2IGNsYXNzPSJjdGEtYm94Ij4KICAgICAgPGgyPlByb250byBwcmEgY29tZcOnYXI/PC9oMj4KICAgICAgPHA+NyBkaWFzIGdyw6F0aXMsIHNlbSBjYXJ0w6NvIGRlIGNyw6lkaXRvLjwvcD4KICAgICAgPGEgY2xhc3M9ImJ0biBidG4tcHJpbWFyeSIgaHJlZj0iIyI+Q3JpYXIgbWluaGEgY29udGE8L2E+CiAgICA8L2Rpdj4KICAgIDxmb3JtIGNsYXNzPSJjb250YWN0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6YXV0bzsgbWFyZ2luLXJpZ2h0OmF1dG87IHRleHQtYWxpZ246bGVmdDsiPgogICAgICA8aW5wdXQgdHlwZT0idGV4dCIgcGxhY2Vob2xkZXI9IlNldSBub21lIiByZXF1aXJlZD4KICAgICAgPGlucHV0IHR5cGU9ImVtYWlsIiBwbGFjZWhvbGRlcj0iU2V1IGUtbWFpbCIgcmVxdWlyZWQ+CiAgICAgIDx0ZXh0YXJlYSBwbGFjZWhvbGRlcj0iU3VhIG1lbnNhZ2VtIj48L3RleHRhcmVhPgogICAgICA8YnV0dG9uIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiIHR5cGU9InN1Ym1pdCI+RW52aWFyIG1lbnNhZ2VtPC9idXR0b24+CiAgICA8L2Zvcm0+CiAgPC9zZWN0aW9uPgo8L21haW4+Cgo8Zm9vdGVyIGNsYXNzPSJ3cmFwIj4KICA8c3Bhbj7CqSAyMDI2IE5vdmFGaXQuIFRvZG9zIG9zIGRpcmVpdG9zIHJlc2VydmFkb3MuPC9zcGFuPgogIDxzcGFuPkZlaXRvIGNvbSBIVE1MIGUgQ1NTIHB1cm8uPC9zcGFuPgo8L2Zvb3Rlcj4KCjxzY3JpcHQ+CiAgKGZ1bmN0aW9uKCl7CiAgICBjb25zdCBidG4gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndGhlbWUtdG9nZ2xlJyk7CiAgICBjb25zdCByb290ID0gZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50OwogICAgY29uc3Qgc2Fsdm8gPSBsb2NhbFN0b3JhZ2UuZ2V0SXRlbSgnbm92YWZpdC10ZW1hJyk7CiAgICBjb25zdCBwcmVmZXJlRXNjdXJvID0gd2luZG93Lm1hdGNoTWVkaWEoJyhwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyayknKS5tYXRjaGVzOwogICAgZnVuY3Rpb24gc2V0SWNvbihlc2N1cm8peyBidG4udGV4dENvbnRlbnQgPSBlc2N1cm8gPyAn4piA77iPJyA6ICfwn4yZJzsgfQogICAgaWYgKHNhbHZvID09PSAnZGFyaycgfHwgKCFzYWx2byAmJiBwcmVmZXJlRXNjdXJvKSl7IHJvb3Quc2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJywnZGFyaycpOyB9CiAgICBzZXRJY29uKHJvb3QuZ2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJykgPT09ICdkYXJrJyk7CiAgICBidG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBmdW5jdGlvbigpewogICAgICBjb25zdCBhdGl2byA9IHJvb3QuZ2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJykgPT09ICdkYXJrJzsKICAgICAgaWYgKGF0aXZvKXsgcm9vdC5yZW1vdmVBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnKTsgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ25vdmFmaXQtdGVtYScsJ2xpZ2h0Jyk7IH0KICAgICAgZWxzZSB7IHJvb3Quc2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJywnZGFyaycpOyBsb2NhbFN0b3JhZ2Uuc2V0SXRlbSgnbm92YWZpdC10ZW1hJywnZGFyaycpOyB9CiAgICAgIHNldEljb24oIWF0aXZvKTsKICAgIH0pOwogIH0pKCk7Cjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K",   codeEl:'code-landing',   frame:'frame-landing',   badge:'lines-landing' },
+    portfolio: { b64: "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+QW5hIFJpYmVpcm8g4oCUIFBvcnRmw7NsaW88L3RpdGxlPgo8bWV0YSBuYW1lPSJkZXNjcmlwdGlvbiIgY29udGVudD0iUG9ydGbDs2xpbyBwZXNzb2FsIGRlIGV4ZW1wbG8gY29tIGZpbHRybyBkZSBwcm9qZXRvcyBlIG1vZG8gZXNjdXJvLiI+CjxsaW5rIHJlbD0icHJlY29ubmVjdCIgaHJlZj0iaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbSI+CjxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9U29yYTp3Z2h0QDQwMDs1MDA7NjAwOzcwMDs4MDAmZmFtaWx5PUludGVyOndnaHRANDAwOzUwMCZkaXNwbGF5PXN3YXAiIHJlbD0ic3R5bGVzaGVldCI+CjxzdHlsZT4KICA6cm9vdHsKICAgIC0tYmc6I2ZiZmJmYTsgLS1jYXJkOiNmZmZmZmY7IC0tdGV4dDojMTYxNTEzOyAtLXRleHQtZGltOiM2MTVmNTg7CiAgICAtLWJvcmRlcjojZTdlNWUwOyAtLWFjY2VudDojZDk1ZDM5OyAtLWFjY2VudC0yOiMyYjJhMjc7CiAgICAtLXNoYWRvdzowIDEycHggMzJweCByZ2JhKDAsMCwwLC4wNyk7IC0tcmFkaXVzOjE2cHg7CiAgICAtLWZvbnQ6J0ludGVyJyxzYW5zLXNlcmlmOyAtLWZvbnQtZDonU29yYScsc2Fucy1zZXJpZjsKICB9CiAgW2RhdGEtdGhlbWU9ImRhcmsiXXsKICAgIC0tYmc6IzEyMTExMDsgLS1jYXJkOiMxYTE5MTc7IC0tdGV4dDojZjFlZmU5OyAtLXRleHQtZGltOiNhN2E0OWM7CiAgICAtLWJvcmRlcjojMmMyYTI2OyAtLWFjY2VudDojZmY3YTUyOyAtLWFjY2VudC0yOiNmMWVmZTk7CiAgICAtLXNoYWRvdzowIDEycHggNDBweCByZ2JhKDAsMCwwLC41NSk7CiAgfQogICp7IGJveC1zaXppbmc6Ym9yZGVyLWJveDsgbWFyZ2luOjA7IHBhZGRpbmc6MDsgfQogIGJvZHl7IGZvbnQtZmFtaWx5OnZhcigtLWZvbnQpOyBiYWNrZ3JvdW5kOnZhcigtLWJnKTsgY29sb3I6dmFyKC0tdGV4dCk7IGxpbmUtaGVpZ2h0OjEuNjsgdHJhbnNpdGlvbjouMjVzOyB9CiAgaDEsaDIsaDN7IGZvbnQtZmFtaWx5OnZhcigtLWZvbnQtZCk7IH0KICBheyBjb2xvcjppbmhlcml0OyB0ZXh0LWRlY29yYXRpb246bm9uZTsgfQogIC53cmFweyBtYXgtd2lkdGg6MTA4MHB4OyBtYXJnaW46MCBhdXRvOyBwYWRkaW5nOjAgMjRweDsgfQoKICBoZWFkZXJ7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsgcGFkZGluZzoyNnB4IDA7IH0KICAubG9nb3sgZm9udC1mYW1pbHk6dmFyKC0tZm9udC1kKTsgZm9udC13ZWlnaHQ6ODAwOyBmb250LXNpemU6MTlweDsgfQogIG5hdiB1bHsgZGlzcGxheTpmbGV4OyBnYXA6MjZweDsgbGlzdC1zdHlsZTpub25lOyBmb250LXNpemU6MTRweDsgfQogIG5hdiBhOmhvdmVyeyBjb2xvcjp2YXIoLS1hY2NlbnQpOyB9CiAgI3RoZW1lLXRvZ2dsZXsgd2lkdGg6MzhweDsgaGVpZ2h0OjM4cHg7IGJvcmRlci1yYWRpdXM6NTAlOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGN1cnNvcjpwb2ludGVyOyB9CiAgaGVhZGVyIC5yaWdodHsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDoxNnB4OyB9CgogIC5oZXJveyBwYWRkaW5nOjYwcHggMCA3MHB4OyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgLjVmcjsgZ2FwOjQwcHg7IGFsaWduLWl0ZW1zOmNlbnRlcjsgfQogIC5oZXJvIC5raWNrZXJ7IGNvbG9yOnZhcigtLWFjY2VudCk7IGZvbnQtd2VpZ2h0OjYwMDsgZm9udC1zaXplOjE0cHg7IH0KICAuaGVybyBoMXsgZm9udC1zaXplOmNsYW1wKDMycHgsNC40dncsNTBweCk7IGxpbmUtaGVpZ2h0OjEuMTsgbWFyZ2luLXRvcDoxMnB4OyB9CiAgLmhlcm8gcHsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBtYXgtd2lkdGg6NDgwcHg7IG1hcmdpbi10b3A6MTZweDsgZm9udC1zaXplOjE2cHg7IH0KICAuaGVyby1hY3Rpb25zeyBkaXNwbGF5OmZsZXg7IGdhcDoxNHB4OyBtYXJnaW4tdG9wOjI2cHg7IH0KICAuYnRueyBwYWRkaW5nOjExcHggMjJweDsgYm9yZGVyLXJhZGl1czo5OTlweDsgZm9udC1zaXplOjE0cHg7IGZvbnQtd2VpZ2h0OjYwMDsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBjdXJzb3I6cG9pbnRlcjsgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgfQogIC5idG4tcHJpbWFyeXsgYmFja2dyb3VuZDp2YXIoLS1hY2NlbnQpOyBjb2xvcjojZmZmOyBib3JkZXItY29sb3I6dmFyKC0tYWNjZW50KTsgfQogIC5oZXJvLXBob3RveyBhc3BlY3QtcmF0aW86MTsgYm9yZGVyLXJhZGl1czo1MCU7IGJhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDE2MGRlZyx2YXIoLS1hY2NlbnQpLHZhcigtLWFjY2VudC0yKSk7IH0KCiAgc2VjdGlvbnsgcGFkZGluZzo2MHB4IDA7IGJvcmRlci10b3A6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IH0KICAuc2VjdGlvbi10aXRsZXsgZm9udC1zaXplOjI2cHg7IG1hcmdpbi1ib3R0b206MTBweDsgfQogIC5zZWN0aW9uLXN1YnsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBtYXgtd2lkdGg6NTIwcHg7IG1hcmdpbi1ib3R0b206MzBweDsgfQoKICAuZmlsdGVyc3sgZGlzcGxheTpmbGV4OyBnYXA6MTBweDsgbWFyZ2luLWJvdHRvbToyNnB4OyBmbGV4LXdyYXA6d3JhcDsgfQogIC5maWx0ZXItYnRuewogICAgcGFkZGluZzo4cHggMTZweDsgYm9yZGVyLXJhZGl1czo5OTlweDsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOwogICAgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBmb250LXNpemU6MTMuNXB4OyBjdXJzb3I6cG9pbnRlcjsgZm9udC1mYW1pbHk6dmFyKC0tZm9udCk7CiAgfQogIC5maWx0ZXItYnRuLmFjdGl2ZXsgYmFja2dyb3VuZDp2YXIoLS1hY2NlbnQpOyBjb2xvcjojZmZmOyBib3JkZXItY29sb3I6dmFyKC0tYWNjZW50KTsgfQoKICAucHJvai1ncmlkeyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoMiwxZnIpOyBnYXA6MjJweDsgfQogIC5wcm9qLWNhcmR7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVyLXJhZGl1czp2YXIoLS1yYWRpdXMpOyBvdmVyZmxvdzpoaWRkZW47IGJveC1zaGFkb3c6dmFyKC0tc2hhZG93KTsgdHJhbnNpdGlvbjp0cmFuc2Zvcm0gLjJzOyB9CiAgLnByb2otY2FyZDpob3ZlcnsgdHJhbnNmb3JtOnRyYW5zbGF0ZVkoLTRweCk7IH0KICAucHJvai10aHVtYnsgYXNwZWN0LXJhdGlvOjE2LzEwOyBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxNDVkZWcsdmFyKC0tYWNjZW50KSx2YXIoLS1hY2NlbnQtMikpOyBvcGFjaXR5Oi44NTsgfQogIC5wcm9qLWJvZHl7IHBhZGRpbmc6MjBweDsgfQogIC5wcm9qLXRhZ3sgZm9udC1zaXplOjExLjVweDsgY29sb3I6dmFyKC0tYWNjZW50KTsgZm9udC13ZWlnaHQ6NzAwOyB0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7IGxldHRlci1zcGFjaW5nOi4wNWVtOyB9CiAgLnByb2otYm9keSBoM3sgZm9udC1zaXplOjE3cHg7IG1hcmdpbi10b3A6NnB4OyB9CiAgLnByb2otYm9keSBweyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IGZvbnQtc2l6ZToxMy44cHg7IG1hcmdpbi10b3A6NnB4OyB9CiAgLnByb2otY2FyZC5oaWRkZW57IGRpc3BsYXk6bm9uZTsgfQoKICAuc2tpbGxzLWdyaWR7IGRpc3BsYXk6Z3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCg0LDFmcik7IGdhcDoxNnB4OyB9CiAgLnNraWxsLWNhcmR7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVyLXJhZGl1czoxMnB4OyBwYWRkaW5nOjE4cHg7IHRleHQtYWxpZ246Y2VudGVyOyB9CiAgLnNraWxsLWNhcmQgYnsgZGlzcGxheTpibG9jazsgZm9udC1mYW1pbHk6dmFyKC0tZm9udC1kKTsgZm9udC1zaXplOjE1cHg7IH0KICAuc2tpbGwtYmFyeyBoZWlnaHQ6NXB4OyBiYWNrZ3JvdW5kOnZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6OTlweDsgbWFyZ2luLXRvcDoxMHB4OyBvdmVyZmxvdzpoaWRkZW47IH0KICAuc2tpbGwtYmFyIGl7IGRpc3BsYXk6YmxvY2s7IGhlaWdodDoxMDAlOyBiYWNrZ3JvdW5kOnZhcigtLWFjY2VudCk7IH0KCiAgLmFib3V0LWdyaWR7IGRpc3BsYXk6Z3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnI7IGdhcDo0MHB4OyBhbGlnbi1pdGVtczpjZW50ZXI7IH0KICAuYWJvdXQtZ3JpZCBweyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IG1hcmdpbi10b3A6MTRweDsgfQogIC5hYm91dC1waG90b3sgYXNwZWN0LXJhdGlvOjQvMzsgYm9yZGVyLXJhZGl1czp2YXIoLS1yYWRpdXMpOyBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxNjBkZWcsdmFyKC0tYWNjZW50LTIpLHZhcigtLWFjY2VudCkpOyB9CgogIGZvcm0uY29udGFjdHsgZGlzcGxheTpncmlkOyBnYXA6MTRweDsgbWF4LXdpZHRoOjUyMHB4OyB9CiAgZm9ybS5jb250YWN0IGlucHV0LCBmb3JtLmNvbnRhY3QgdGV4dGFyZWF7CiAgICBwYWRkaW5nOjEzcHggMTRweDsgYm9yZGVyLXJhZGl1czoxMHB4OyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGNvbG9yOnZhcigtLXRleHQpOyBmb250LWZhbWlseTp2YXIoLS1mb250KTsgZm9udC1zaXplOjE0cHg7CiAgfQogIGZvcm0uY29udGFjdCB0ZXh0YXJlYXsgbWluLWhlaWdodDoxMTBweDsgcmVzaXplOnZlcnRpY2FsOyB9CgogIGZvb3RlcnsgYm9yZGVyLXRvcDoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgcGFkZGluZzozNHB4IDA7IHRleHQtYWxpZ246Y2VudGVyOyBjb2xvcjp2YXIoLS10ZXh0LWRpbSk7IGZvbnQtc2l6ZToxM3B4OyB9CgogIEBtZWRpYSAobWF4LXdpZHRoOjgwMHB4KXsKICAgIC5oZXJveyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9CiAgICAucHJvai1ncmlkeyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9CiAgICAuc2tpbGxzLWdyaWR7IGdyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoMiwxZnIpOyB9CiAgICAuYWJvdXQtZ3JpZHsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcjsgfQogICAgbmF2IHVseyBkaXNwbGF5Om5vbmU7IH0KICB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+Cgo8aGVhZGVyIGNsYXNzPSJ3cmFwIj4KICA8ZGl2IGNsYXNzPSJsb2dvIj5hbmEucmliZWlybzwvZGl2PgogIDxuYXY+PHVsPgogICAgPGxpPjxhIGhyZWY9IiNwcm9qZXRvcyI+UHJvamV0b3M8L2E+PC9saT4KICAgIDxsaT48YSBocmVmPSIjc29icmUiPlNvYnJlPC9hPjwvbGk+CiAgICA8bGk+PGEgaHJlZj0iI3NraWxscyI+SGFiaWxpZGFkZXM8L2E+PC9saT4KICAgIDxsaT48YSBocmVmPSIjY29udGF0byI+Q29udGF0bzwvYT48L2xpPgogIDwvdWw+PC9uYXY+CiAgPGRpdiBjbGFzcz0icmlnaHQiPgogICAgPGJ1dHRvbiBpZD0idGhlbWUtdG9nZ2xlIiBhcmlhLWxhYmVsPSJBbHRlcm5hciB0ZW1hIj7wn4yZPC9idXR0b24+CiAgICA8YSBjbGFzcz0iYnRuIGJ0bi1wcmltYXJ5IiBocmVmPSIjY29udGF0byI+RmFsYXIgY29taWdvPC9hPgogIDwvZGl2Pgo8L2hlYWRlcj4KCjxtYWluIGNsYXNzPSJ3cmFwIj4KICA8c2VjdGlvbiBjbGFzcz0iaGVybyIgc3R5bGU9ImJvcmRlcjpub25lOyBwYWRkaW5nLXRvcDoyMHB4OyI+CiAgICA8ZGl2PgogICAgICA8c3BhbiBjbGFzcz0ia2lja2VyIj5EZXNpZ25lciAmIERlc2Vudm9sdmVkb3JhIEZyb250LWVuZDwvc3Bhbj4KICAgICAgPGgxPkV1IGNyaW8gaW50ZXJmYWNlcyBxdWUgYXMgcGVzc29hcyBnb3N0YW0gZGUgdXNhci48L2gxPgogICAgICA8cD5UcmFiYWxobyBuYSBmcm9udGVpcmEgZW50cmUgZGVzaWduIGUgY8OzZGlnbyDigJQgZG8gd2lyZWZyYW1lIGFvIEhUTUwvQ1NTIGZpbmFsLCBzZW0gcGVyZGVyIGEgaWRlaWEgb3JpZ2luYWwgbm8gY2FtaW5oby48L3A+CiAgICAgIDxkaXYgY2xhc3M9Imhlcm8tYWN0aW9ucyI+CiAgICAgICAgPGEgY2xhc3M9ImJ0biBidG4tcHJpbWFyeSIgaHJlZj0iI3Byb2pldG9zIj5WZXIgcHJvamV0b3M8L2E+CiAgICAgICAgPGEgY2xhc3M9ImJ0biIgaHJlZj0iI2NvbnRhdG8iPkNvbnRyYXRhcjwvYT4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9Imhlcm8tcGhvdG8iPjwvZGl2PgogIDwvc2VjdGlvbj4KCiAgPHNlY3Rpb24gaWQ9InByb2pldG9zIj4KICAgIDxoMiBjbGFzcz0ic2VjdGlvbi10aXRsZSI+UHJvamV0b3Mgc2VsZWNpb25hZG9zPC9oMj4KICAgIDxwIGNsYXNzPSJzZWN0aW9uLXN1YiI+VW1hIG1pc3R1cmEgZGUgdHJhYmFsaG8gZnJlZWxhbmNlIGUgcHJvamV0b3MgcGVzc29haXMuIFVzZSBvcyBmaWx0cm9zIHByYSBuYXZlZ2FyIHBvciB0aXBvLjwvcD4KCiAgICA8ZGl2IGNsYXNzPSJmaWx0ZXJzIj4KICAgICAgPGJ1dHRvbiBjbGFzcz0iZmlsdGVyLWJ0biBhY3RpdmUiIGRhdGEtZmlsdGVyPSJ0b2RvcyI+VG9kb3M8L2J1dHRvbj4KICAgICAgPGJ1dHRvbiBjbGFzcz0iZmlsdGVyLWJ0biIgZGF0YS1maWx0ZXI9InNpdGUiPlNpdGVzPC9idXR0b24+CiAgICAgIDxidXR0b24gY2xhc3M9ImZpbHRlci1idG4iIGRhdGEtZmlsdGVyPSJhcHAiPkFwcHM8L2J1dHRvbj4KICAgICAgPGJ1dHRvbiBjbGFzcz0iZmlsdGVyLWJ0biIgZGF0YS1maWx0ZXI9ImJyYW5kaW5nIj5CcmFuZGluZzwvYnV0dG9uPgogICAgPC9kaXY+CgogICAgPGRpdiBjbGFzcz0icHJvai1ncmlkIiBpZD0icHJvai1ncmlkIj4KICAgICAgPGRpdiBjbGFzcz0icHJvai1jYXJkIiBkYXRhLWNhdD0ic2l0ZSI+PGRpdiBjbGFzcz0icHJvai10aHVtYiI+PC9kaXY+PGRpdiBjbGFzcz0icHJvai1ib2R5Ij48c3BhbiBjbGFzcz0icHJvai10YWciPlNpdGU8L3NwYW4+PGgzPkxvamEgVmVyZGUg4oCUIEUtY29tbWVyY2U8L2gzPjxwPlNpdGUgaW5zdGl0dWNpb25hbCArIGxvamEgcGFyYSBtYXJjYSBkZSBwcm9kdXRvcyBzdXN0ZW50w6F2ZWlzLjwvcD48L2Rpdj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0icHJvai1jYXJkIiBkYXRhLWNhdD0iYXBwIj48ZGl2IGNsYXNzPSJwcm9qLXRodW1iIj48L2Rpdj48ZGl2IGNsYXNzPSJwcm9qLWJvZHkiPjxzcGFuIGNsYXNzPSJwcm9qLXRhZyI+QXBwPC9zcGFuPjxoMz5GbHV4byDigJQgQXBwIGRlIGZpbmFuw6dhczwvaDM+PHA+SW50ZXJmYWNlIGRlIGFwcCBtb2JpbGUgcGFyYSBjb250cm9sZSBkZSBnYXN0b3MgcGVzc29haXMuPC9wPjwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJwcm9qLWNhcmQiIGRhdGEtY2F0PSJicmFuZGluZyI+PGRpdiBjbGFzcz0icHJvai10aHVtYiI+PC9kaXY+PGRpdiBjbGFzcz0icHJvai1ib2R5Ij48c3BhbiBjbGFzcz0icHJvai10YWciPkJyYW5kaW5nPC9zcGFuPjxoMz5DYWbDqSBSYWl6IOKAlCBJZGVudGlkYWRlIHZpc3VhbDwvaDM+PHA+TWFyY2EgY29tcGxldGEgcGFyYSBjYWZldGVyaWEgZGUgYmFpcnJvLCBkbyBsb2dvIGFvIGNhcmTDoXBpby48L3A+PC9kaXY+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9InByb2otY2FyZCIgZGF0YS1jYXQ9InNpdGUiPjxkaXYgY2xhc3M9InByb2otdGh1bWIiPjwvZGl2PjxkaXYgY2xhc3M9InByb2otYm9keSI+PHNwYW4gY2xhc3M9InByb2otdGFnIj5TaXRlPC9zcGFuPjxoMz5Fc3TDumRpbyBMdW1lbiDigJQgUG9ydGbDs2xpbzwvaDM+PHA+U2l0ZSBwYXJhIGVzdMO6ZGlvIGRlIGZvdG9ncmFmaWEsIGNvbSBnYWxlcmlhIGVtIGdyYWRlLjwvcD48L2Rpdj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0icHJvai1jYXJkIiBkYXRhLWNhdD0iYXBwIj48ZGl2IGNsYXNzPSJwcm9qLXRodW1iIj48L2Rpdj48ZGl2IGNsYXNzPSJwcm9qLWJvZHkiPjxzcGFuIGNsYXNzPSJwcm9qLXRhZyI+QXBwPC9zcGFuPjxoMz5UcmlsaGEg4oCUIEFwcCBkZSBow6FiaXRvczwvaDM+PHA+UHJvdMOzdGlwbyBkZSBhcHAgcGFyYSBhY29tcGFuaGFtZW50byBkZSBow6FiaXRvcyBkacOhcmlvcy48L3A+PC9kaXY+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9InByb2otY2FyZCIgZGF0YS1jYXQ9ImJyYW5kaW5nIj48ZGl2IGNsYXNzPSJwcm9qLXRodW1iIj48L2Rpdj48ZGl2IGNsYXNzPSJwcm9qLWJvZHkiPjxzcGFuIGNsYXNzPSJwcm9qLXRhZyI+QnJhbmRpbmc8L3NwYW4+PGgzPsOTcmJpdGEg4oCUIElkZW50aWRhZGUgdGVjaDwvaDM+PHA+U2lzdGVtYSBkZSBtYXJjYSBwYXJhIHN0YXJ0dXAgZGUgbG9nw61zdGljYS48L3A+PC9kaXY+PC9kaXY+CiAgICA8L2Rpdj4KICA8L3NlY3Rpb24+CgogIDxzZWN0aW9uIGlkPSJza2lsbHMiPgogICAgPGgyIGNsYXNzPSJzZWN0aW9uLXRpdGxlIj5IYWJpbGlkYWRlczwvaDI+CiAgICA8cCBjbGFzcz0ic2VjdGlvbi1zdWIiPkZlcnJhbWVudGFzIGUgbGluZ3VhZ2VucyBxdWUgdXNvIG5vIGRpYSBhIGRpYS48L3A+CiAgICA8ZGl2IGNsYXNzPSJza2lsbHMtZ3JpZCI+CiAgICAgIDxkaXYgY2xhc3M9InNraWxsLWNhcmQiPjxiPkhUTUwvQ1NTPC9iPjxkaXYgY2xhc3M9InNraWxsLWJhciI+PGkgc3R5bGU9IndpZHRoOjk1JSI+PC9pPjwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJza2lsbC1jYXJkIj48Yj5KYXZhU2NyaXB0PC9iPjxkaXYgY2xhc3M9InNraWxsLWJhciI+PGkgc3R5bGU9IndpZHRoOjgwJSI+PC9pPjwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJza2lsbC1jYXJkIj48Yj5GaWdtYTwvYj48ZGl2IGNsYXNzPSJza2lsbC1iYXIiPjxpIHN0eWxlPSJ3aWR0aDo5MCUiPjwvaT48L2Rpdj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0ic2tpbGwtY2FyZCI+PGI+RGVzaWduIGRlIFVJPC9iPjxkaXYgY2xhc3M9InNraWxsLWJhciI+PGkgc3R5bGU9IndpZHRoOjg4JSI+PC9pPjwvZGl2PjwvZGl2PgogICAgPC9kaXY+CiAgPC9zZWN0aW9uPgoKICA8c2VjdGlvbiBpZD0ic29icmUiPgogICAgPGRpdiBjbGFzcz0iYWJvdXQtZ3JpZCI+CiAgICAgIDxkaXYgY2xhc3M9ImFib3V0LXBob3RvIj48L2Rpdj4KICAgICAgPGRpdj4KICAgICAgICA8aDIgY2xhc3M9InNlY3Rpb24tdGl0bGUiPlNvYnJlIG1pbTwvaDI+CiAgICAgICAgPHA+U291IGRlc2lnbmVyIGUgZGVzZW52b2x2ZWRvcmEgZnJvbnQtZW5kIGjDoSA2IGFub3MuIENvbWVjZWkgZmF6ZW5kbyBzaXRlcyBwYXJhIHBlcXVlbm9zIG5lZ8OzY2lvcyBkYSBtaW5oYSBjaWRhZGUgZSBob2plIHRyYWJhbGhvIGNvbSBtYXJjYXMgbWFpb3Jlcywgc2VtcHJlIG1hbnRlbmRvIG8gbWVzbW8gcHJpbmPDrXBpbzogaW50ZXJmYWNlIGJvYSDDqSBhIHF1ZSBzb21lLCBlIGRlaXhhIG8gY29udGXDumRvIGZhbGFyLjwvcD4KICAgICAgICA8cD5Gb3JhIGRvIHRyYWJhbGhvLCBlc3R1ZG8gdGlwb2dyYWZpYSBlIGNvbGVjaW9ubyBjYWRlcm5vcyBxdWUgbnVuY2EgdXNvLjwvcD4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICA8L3NlY3Rpb24+CgogIDxzZWN0aW9uIGlkPSJjb250YXRvIj4KICAgIDxoMiBjbGFzcz0ic2VjdGlvbi10aXRsZSI+VmFtb3MgY29udmVyc2FyPC9oMj4KICAgIDxwIGNsYXNzPSJzZWN0aW9uLXN1YiI+TWUgY29udGEgc29icmUgc2V1IHByb2pldG8g4oCUIHJlc3BvbmRvIGVtIGF0w6kgMiBkaWFzIMO6dGVpcy48L3A+CiAgICA8Zm9ybSBjbGFzcz0iY29udGFjdCI+CiAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBwbGFjZWhvbGRlcj0iU2V1IG5vbWUiIHJlcXVpcmVkPgogICAgICA8aW5wdXQgdHlwZT0iZW1haWwiIHBsYWNlaG9sZGVyPSJTZXUgZS1tYWlsIiByZXF1aXJlZD4KICAgICAgPHRleHRhcmVhIHBsYWNlaG9sZGVyPSJDb250ZSBzb2JyZSBvIHByb2pldG8iPjwvdGV4dGFyZWE+CiAgICAgIDxidXR0b24gY2xhc3M9ImJ0biBidG4tcHJpbWFyeSIgdHlwZT0ic3VibWl0IiBzdHlsZT0id2lkdGg6Zml0LWNvbnRlbnQiPkVudmlhcjwvYnV0dG9uPgogICAgPC9mb3JtPgogIDwvc2VjdGlvbj4KPC9tYWluPgoKPGZvb3Rlcj7CqSAyMDI2IEFuYSBSaWJlaXJvLiBUb2RvcyBvcyBkaXJlaXRvcyByZXNlcnZhZG9zLjwvZm9vdGVyPgoKPHNjcmlwdD4KICAvLyBNb2RvIGVzY3VybwogIChmdW5jdGlvbigpewogICAgY29uc3QgYnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3RoZW1lLXRvZ2dsZScpOwogICAgY29uc3Qgcm9vdCA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudDsKICAgIGNvbnN0IHNhbHZvID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ3BvcnRmb2xpby10ZW1hJyk7CiAgICBjb25zdCBwcmVmZXJlRXNjdXJvID0gd2luZG93Lm1hdGNoTWVkaWEoJyhwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyayknKS5tYXRjaGVzOwogICAgZnVuY3Rpb24gc2V0SWNvbihlc2N1cm8peyBidG4udGV4dENvbnRlbnQgPSBlc2N1cm8gPyAn4piA77iPJyA6ICfwn4yZJzsgfQogICAgaWYgKHNhbHZvID09PSAnZGFyaycgfHwgKCFzYWx2byAmJiBwcmVmZXJlRXNjdXJvKSl7IHJvb3Quc2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJywnZGFyaycpOyB9CiAgICBzZXRJY29uKHJvb3QuZ2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJykgPT09ICdkYXJrJyk7CiAgICBidG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBmdW5jdGlvbigpewogICAgICBjb25zdCBhdGl2byA9IHJvb3QuZ2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJykgPT09ICdkYXJrJzsKICAgICAgaWYgKGF0aXZvKXsgcm9vdC5yZW1vdmVBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnKTsgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ3BvcnRmb2xpby10ZW1hJywnbGlnaHQnKTsgfQogICAgICBlbHNlIHsgcm9vdC5zZXRBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnLCdkYXJrJyk7IGxvY2FsU3RvcmFnZS5zZXRJdGVtKCdwb3J0Zm9saW8tdGVtYScsJ2RhcmsnKTsgfQogICAgICBzZXRJY29uKCFhdGl2byk7CiAgICB9KTsKICB9KSgpOwoKICAvLyBGaWx0cm8gZGUgcHJvamV0b3MKICAoZnVuY3Rpb24oKXsKICAgIGNvbnN0IGJvdG9lcyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5maWx0ZXItYnRuJyk7CiAgICBjb25zdCBjYXJkcyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5wcm9qLWNhcmQnKTsKICAgIGJvdG9lcy5mb3JFYWNoKGZ1bmN0aW9uKGIpewogICAgICBiLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgZnVuY3Rpb24oKXsKICAgICAgICBib3RvZXMuZm9yRWFjaChmdW5jdGlvbih4KXsgeC5jbGFzc0xpc3QucmVtb3ZlKCdhY3RpdmUnKTsgfSk7CiAgICAgICAgYi5jbGFzc0xpc3QuYWRkKCdhY3RpdmUnKTsKICAgICAgICBjb25zdCBmaWx0cm8gPSBiLmdldEF0dHJpYnV0ZSgnZGF0YS1maWx0ZXInKTsKICAgICAgICBjYXJkcy5mb3JFYWNoKGZ1bmN0aW9uKGMpewogICAgICAgICAgY29uc3QgbW9zdHJhciA9IGZpbHRybyA9PT0gJ3RvZG9zJyB8fCBjLmdldEF0dHJpYnV0ZSgnZGF0YS1jYXQnKSA9PT0gZmlsdHJvOwogICAgICAgICAgYy5jbGFzc0xpc3QudG9nZ2xlKCdoaWRkZW4nLCAhbW9zdHJhcik7CiAgICAgICAgfSk7CiAgICAgIH0pOwogICAgfSk7CiAgfSkoKTsKPC9zY3JpcHQ+CjwvYm9keT4KPC9odG1sPgo=", codeEl:'code-portfolio', frame:'frame-portfolio', badge:'lines-portfolio' },
+    blog:      { b64: "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+UG9udG8gRml4byDigJQgQmxvZzwvdGl0bGU+CjxtZXRhIG5hbWU9ImRlc2NyaXB0aW9uIiBjb250ZW50PSJCbG9nIGRlIGV4ZW1wbG8gY29tIGNhdGVnb3JpYXMsIHNpZGViYXIgZSBtb2RvIGVzY3Vyby4iPgo8bGluayByZWw9InByZWNvbm5lY3QiIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20iPgo8bGluayBocmVmPSJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PU1lcnJpd2VhdGhlcjp3Z2h0QDcwMDs5MDAmZmFtaWx5PUludGVyOndnaHRANDAwOzUwMDs2MDAmZGlzcGxheT1zd2FwIiByZWw9InN0eWxlc2hlZXQiPgo8c3R5bGU+CiAgOnJvb3R7CiAgICAtLWJnOiNmZGZkZmI7IC0tY2FyZDojZmZmZmZmOyAtLXRleHQ6IzFhMWExODsgLS10ZXh0LWRpbTojNjg2NjVmOwogICAgLS1ib3JkZXI6I2U4ZTZlMDsgLS1hY2NlbnQ6IzFkNGVkODsgLS1hY2NlbnQtMjojYjkxYzFjOwogICAgLS1zaGFkb3c6MCAxMHB4IDI4cHggcmdiYSgwLDAsMCwuMDUpOyAtLXJhZGl1czoxMnB4OwogICAgLS1mb250OidJbnRlcicsc2Fucy1zZXJpZjsgLS1mb250LWQ6J01lcnJpd2VhdGhlcicsc2VyaWY7CiAgfQogIFtkYXRhLXRoZW1lPSJkYXJrIl17CiAgICAtLWJnOiMxMzEzMTM7IC0tY2FyZDojMWMxYzFiOyAtLXRleHQ6I2VlZWNlNjsgLS10ZXh0LWRpbTojYTRhMTlhOwogICAgLS1ib3JkZXI6IzJiMmEyNzsgLS1hY2NlbnQ6IzdhYTJmZjsgLS1hY2NlbnQtMjojZmY4YTgwOwogICAgLS1zaGFkb3c6MCAxMHB4IDM2cHggcmdiYSgwLDAsMCwuNTUpOwogIH0KICAqeyBib3gtc2l6aW5nOmJvcmRlci1ib3g7IG1hcmdpbjowOyBwYWRkaW5nOjA7IH0KICBib2R5eyBmb250LWZhbWlseTp2YXIoLS1mb250KTsgYmFja2dyb3VuZDp2YXIoLS1iZyk7IGNvbG9yOnZhcigtLXRleHQpOyBsaW5lLWhlaWdodDoxLjc7IHRyYW5zaXRpb246LjI1czsgfQogIGgxLGgyLGgzeyBmb250LWZhbWlseTp2YXIoLS1mb250LWQpOyB9CiAgYXsgY29sb3I6aW5oZXJpdDsgdGV4dC1kZWNvcmF0aW9uOm5vbmU7IH0KICAud3JhcHsgbWF4LXdpZHRoOjEwODBweDsgbWFyZ2luOjAgYXV0bzsgcGFkZGluZzowIDI0cHg7IH0KCiAgaGVhZGVyeyBib3JkZXItYm90dG9tOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyB9CiAgLnRvcC1iYXJ7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsgcGFkZGluZzoyMHB4IDA7IH0KICAubG9nb3sgZm9udC1mYW1pbHk6dmFyKC0tZm9udC1kKTsgZm9udC13ZWlnaHQ6OTAwOyBmb250LXNpemU6MjJweDsgfQogIC50b3AtYmFyIG5hdiB1bHsgZGlzcGxheTpmbGV4OyBnYXA6MjRweDsgbGlzdC1zdHlsZTpub25lOyBmb250LXNpemU6MTRweDsgfQogIC50b3AtYmFyIG5hdiBhOmhvdmVyeyBjb2xvcjp2YXIoLS1hY2NlbnQpOyB9CiAgI3RoZW1lLXRvZ2dsZXsgd2lkdGg6MzZweDsgaGVpZ2h0OjM2cHg7IGJvcmRlci1yYWRpdXM6NTAlOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGN1cnNvcjpwb2ludGVyOyB9CiAgLnRvcC1yaWdodHsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDoxNnB4OyB9CgogIC5sYXlvdXR7IGRpc3BsYXk6Z3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjIuMmZyIDFmcjsgZ2FwOjQ0cHg7IHBhZGRpbmc6NDRweCAwIDcwcHg7IH0KCiAgLmZlYXR1cmVkeyBtYXJnaW4tYm90dG9tOjM2cHg7IH0KICAuZmVhdHVyZWQtdGh1bWJ7IGFzcGVjdC1yYXRpbzoxNi84OyBib3JkZXItcmFkaXVzOnZhcigtLXJhZGl1cyk7IGJhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDE1MGRlZyx2YXIoLS1hY2NlbnQpLHZhcigtLWFjY2VudC0yKSk7IG1hcmdpbi1ib3R0b206MThweDsgfQogIC5mZWF0dXJlZCAuY2F0eyBjb2xvcjp2YXIoLS1hY2NlbnQpOyBmb250LXdlaWdodDo3MDA7IGZvbnQtc2l6ZToxMi41cHg7IHRleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTsgbGV0dGVyLXNwYWNpbmc6LjA1ZW07IH0KICAuZmVhdHVyZWQgaDF7IGZvbnQtc2l6ZTozMnB4OyBtYXJnaW4tdG9wOjEwcHg7IGxpbmUtaGVpZ2h0OjEuMjU7IH0KICAuZmVhdHVyZWQgcHsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBtYXJnaW4tdG9wOjEycHg7IH0KICAubWV0YXsgZGlzcGxheTpmbGV4OyBnYXA6MTRweDsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBmb250LXNpemU6MTNweDsgbWFyZ2luLXRvcDoxNHB4OyB9CgogIC5wb3N0LWxpc3R7IGRpc3BsYXk6ZmxleDsgZmxleC1kaXJlY3Rpb246Y29sdW1uOyBnYXA6MjZweDsgfQogIC5wb3N0LXJvd3sgZGlzcGxheTpncmlkOyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MTUwcHggMWZyOyBnYXA6MThweDsgcGFkZGluZy1ib3R0b206MjZweDsgYm9yZGVyLWJvdHRvbToxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgfQogIC5wb3N0LXRodW1ieyBhc3BlY3QtcmF0aW86MTsgYm9yZGVyLXJhZGl1czoxMHB4OyBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxNTBkZWcsdmFyKC0tYWNjZW50LTIpLHZhcigtLWFjY2VudCkpOyBvcGFjaXR5Oi44OyB9CiAgLnBvc3Qtcm93IC5jYXR7IGNvbG9yOnZhcigtLWFjY2VudCk7IGZvbnQtd2VpZ2h0OjcwMDsgZm9udC1zaXplOjExLjVweDsgdGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlOyBsZXR0ZXItc3BhY2luZzouMDVlbTsgfQogIC5wb3N0LXJvdyBoM3sgZm9udC1zaXplOjE3cHg7IG1hcmdpbi10b3A6NnB4OyB9CiAgLnBvc3Qtcm93IHB7IGNvbG9yOnZhcigtLXRleHQtZGltKTsgZm9udC1zaXplOjEzLjhweDsgbWFyZ2luLXRvcDo2cHg7IH0KCiAgYXNpZGV7IGRpc3BsYXk6ZmxleDsgZmxleC1kaXJlY3Rpb246Y29sdW1uOyBnYXA6MzBweDsgfQogIC53aWRnZXR7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVyLXJhZGl1czp2YXIoLS1yYWRpdXMpOyBwYWRkaW5nOjIwcHg7IGJveC1zaGFkb3c6dmFyKC0tc2hhZG93KTsgfQogIC53aWRnZXQgaDR7IGZvbnQtZmFtaWx5OnZhcigtLWZvbnQpOyBmb250LXNpemU6MTNweDsgdGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlOyBsZXR0ZXItc3BhY2luZzouMDVlbTsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBtYXJnaW4tYm90dG9tOjE0cHg7IH0KICAuY2F0LWxpc3R7IGxpc3Qtc3R5bGU6bm9uZTsgZGlzcGxheTpmbGV4OyBmbGV4LWRpcmVjdGlvbjpjb2x1bW47IGdhcDo5cHg7IGZvbnQtc2l6ZToxNHB4OyB9CiAgLmNhdC1saXN0IGxpeyBkaXNwbGF5OmZsZXg7IGp1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuOyB9CiAgLmNhdC1saXN0IHNwYW57IGNvbG9yOnZhcigtLXRleHQtZGltKTsgZm9udC1zaXplOjEyLjVweDsgfQogIC5uZXdzbGV0dGVyIGlucHV0eyB3aWR0aDoxMDAlOyBwYWRkaW5nOjExcHggMTJweDsgYm9yZGVyLXJhZGl1czo4cHg7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYmFja2dyb3VuZDp2YXIoLS1iZyk7IGNvbG9yOnZhcigtLXRleHQpOyBmb250LWZhbWlseTp2YXIoLS1mb250KTsgZm9udC1zaXplOjEzLjVweDsgbWFyZ2luLWJvdHRvbToxMHB4OyB9CiAgLm5ld3NsZXR0ZXIgYnV0dG9ueyB3aWR0aDoxMDAlOyBwYWRkaW5nOjExcHg7IGJvcmRlci1yYWRpdXM6OHB4OyBib3JkZXI6bm9uZTsgYmFja2dyb3VuZDp2YXIoLS1hY2NlbnQpOyBjb2xvcjojZmZmOyBmb250LXdlaWdodDo2MDA7IGZvbnQtc2l6ZToxMy41cHg7IGN1cnNvcjpwb2ludGVyOyB9CiAgLnRhZy1jbG91ZHsgZGlzcGxheTpmbGV4OyBmbGV4LXdyYXA6d3JhcDsgZ2FwOjhweDsgfQogIC50YWctY2xvdWQgc3BhbnsgZm9udC1zaXplOjEycHg7IHBhZGRpbmc6NXB4IDEwcHg7IGJhY2tncm91bmQ6dmFyKC0tYmcpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6OTk5cHg7IGNvbG9yOnZhcigtLXRleHQtZGltKTsgfQoKICBmb290ZXJ7IGJvcmRlci10b3A6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IHBhZGRpbmc6MzBweCAwOyB0ZXh0LWFsaWduOmNlbnRlcjsgY29sb3I6dmFyKC0tdGV4dC1kaW0pOyBmb250LXNpemU6MTNweDsgfQoKICBAbWVkaWEgKG1heC13aWR0aDo4MjBweCl7CiAgICAubGF5b3V0eyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9CiAgICAucG9zdC1yb3d7IGdyaWQtdGVtcGxhdGUtY29sdW1uczo5MHB4IDFmcjsgfQogICAgLnRvcC1iYXIgbmF2eyBkaXNwbGF5Om5vbmU7IH0KICB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+Cgo8aGVhZGVyPgogIDxkaXYgY2xhc3M9IndyYXAgdG9wLWJhciI+CiAgICA8ZGl2IGNsYXNzPSJsb2dvIj5Qb250byBGaXhvPC9kaXY+CiAgICA8bmF2Pjx1bD4KICAgICAgPGxpPjxhIGhyZWY9IiMiPkluw61jaW88L2E+PC9saT4KICAgICAgPGxpPjxhIGhyZWY9IiMiPlRlY25vbG9naWE8L2E+PC9saT4KICAgICAgPGxpPjxhIGhyZWY9IiMiPkN1bHR1cmE8L2E+PC9saT4KICAgICAgPGxpPjxhIGhyZWY9IiMiPlNvYnJlPC9hPjwvbGk+CiAgICA8L3VsPjwvbmF2PgogICAgPGRpdiBjbGFzcz0idG9wLXJpZ2h0Ij4KICAgICAgPGJ1dHRvbiBpZD0idGhlbWUtdG9nZ2xlIiBhcmlhLWxhYmVsPSJBbHRlcm5hciB0ZW1hIj7wn4yZPC9idXR0b24+CiAgICA8L2Rpdj4KICA8L2Rpdj4KPC9oZWFkZXI+Cgo8ZGl2IGNsYXNzPSJ3cmFwIGxheW91dCI+CiAgPG1haW4+CiAgICA8YXJ0aWNsZSBjbGFzcz0iZmVhdHVyZWQiPgogICAgICA8ZGl2IGNsYXNzPSJmZWF0dXJlZC10aHVtYiI+PC9kaXY+CiAgICAgIDxzcGFuIGNsYXNzPSJjYXQiPlRlY25vbG9naWE8L3NwYW4+CiAgICAgIDxoMT5Qb3IgcXVlIHNpdGVzIHNpbXBsZXMgYWluZGEgdmVuY2VtIGVtIDIwMjY8L2gxPgogICAgICA8cD5FbnRyZSB0YW50b3MgZnJhbWV3b3JrcywgbyBIVE1MIGUgQ1NTIHB1cm8gY29udGludWFtIHNlbmRvIGEgYmFzZSBtYWlzIHLDoXBpZGEsIGFjZXNzw612ZWwgZSBkdXJhZG91cmEgcHJhIGNvbG9jYXIgdW1hIGlkZWlhIG5vIGFyIOKAlCBlIGlzc28gbsOjbyDDqSBub3N0YWxnaWEsIMOpIHByw6F0aWNvLjwvcD4KICAgICAgPGRpdiBjbGFzcz0ibWV0YSI+PHNwYW4+MTIgbWluIGRlIGxlaXR1cmE8L3NwYW4+PHNwYW4+wrc8L3NwYW4+PHNwYW4+MTQgYWdvIDIwMjY8L3NwYW4+PC9kaXY+CiAgICA8L2FydGljbGU+CgogICAgPGRpdiBjbGFzcz0icG9zdC1saXN0Ij4KICAgICAgPGRpdiBjbGFzcz0icG9zdC1yb3ciPgogICAgICAgIDxkaXYgY2xhc3M9InBvc3QtdGh1bWIiPjwvZGl2PgogICAgICAgIDxkaXY+PHNwYW4gY2xhc3M9ImNhdCI+RGVzaWduPC9zcGFuPjxoMz5PIHF1ZSBhcHJlbmRpIHJldmlzYW5kbyAyMDAgbGFuZGluZyBwYWdlczwvaDM+PHA+UGFkcsO1ZXMgcXVlIGFwYXJlY2VtIG5hcyBww6FnaW5hcyBxdWUgcmVhbG1lbnRlIGNvbnZlcnRlbSDigJQgZSBuYXMgcXVlIG7Do28gY29udmVydGVtLjwvcD48L2Rpdj4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9InBvc3Qtcm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJwb3N0LXRodW1iIj48L2Rpdj4KICAgICAgICA8ZGl2PjxzcGFuIGNsYXNzPSJjYXQiPlRlY25vbG9naWE8L3NwYW4+PGgzPk1vZG8gZXNjdXJvOiBhbMOpbSBkYSBlc3TDqXRpY2E8L2gzPjxwPkNvbW8gaW1wbGVtZW50YXIgZGUgZm9ybWEgcXVlIHJlYWxtZW50ZSBlY29ub21pemEgYmF0ZXJpYSBlIHJlZHV6IGNhbnNhw6dvIHZpc3VhbC48L3A+PC9kaXY+CiAgICAgIDwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJwb3N0LXJvdyI+CiAgICAgICAgPGRpdiBjbGFzcz0icG9zdC10aHVtYiI+PC9kaXY+CiAgICAgICAgPGRpdj48c3BhbiBjbGFzcz0iY2F0Ij5DdWx0dXJhPC9zcGFuPjxoMz5Db21vIGEgaW50ZXJuZXQgZG9zIGFub3MgMjAwMCBmb3Jtb3UgdW1hIGdlcmHDp8OjbyBkZSBwcm9ncmFtYWRvcmVzPC9oMz48cD5VbSBvbGhhciBzb2JyZSBHZW9DaXRpZXMsIGbDs3J1bnMgZSBhIGN1cmlvc2lkYWRlIHF1ZSB2ZWlvIGFudGVzIGRvcyBmcmFtZXdvcmtzLjwvcD48L2Rpdj4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9InBvc3Qtcm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJwb3N0LXRodW1iIj48L2Rpdj4KICAgICAgICA8ZGl2PjxzcGFuIGNsYXNzPSJjYXQiPlRlY25vbG9naWE8L3NwYW4+PGgzPklBIGNvbW8gcGFyIGRlIHByb2dyYW1hw6fDo286IG8gcXVlIGZ1bmNpb25hIGRlIHZlcmRhZGU8L2gzPjxwPlByb21wdHMsIGZsdXhvcyBlIG9zIGVycm9zIG1haXMgY29tdW5zIGRlIHF1ZW0gZXN0w6EgY29tZcOnYW5kbyBhIHVzYXIgSUEgcHJhIGNvZGFyLjwvcD48L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICA8L21haW4+CgogIDxhc2lkZT4KICAgIDxkaXYgY2xhc3M9IndpZGdldCI+CiAgICAgIDxoND5DYXRlZ29yaWFzPC9oND4KICAgICAgPHVsIGNsYXNzPSJjYXQtbGlzdCI+CiAgICAgICAgPGxpPlRlY25vbG9naWEgPHNwYW4+MjQ8L3NwYW4+PC9saT4KICAgICAgICA8bGk+RGVzaWduIDxzcGFuPjE4PC9zcGFuPjwvbGk+CiAgICAgICAgPGxpPkN1bHR1cmEgPHNwYW4+OTwvc3Bhbj48L2xpPgogICAgICAgIDxsaT5DYXJyZWlyYSA8c3Bhbj4xMjwvc3Bhbj48L2xpPgogICAgICA8L3VsPgogICAgPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJ3aWRnZXQgbmV3c2xldHRlciI+CiAgICAgIDxoND5OZXdzbGV0dGVyPC9oND4KICAgICAgPGlucHV0IHR5cGU9ImVtYWlsIiBwbGFjZWhvbGRlcj0ic2V1QGVtYWlsLmNvbSI+CiAgICAgIDxidXR0b24+QXNzaW5hcjwvYnV0dG9uPgogICAgPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJ3aWRnZXQiPgogICAgICA8aDQ+VGFncyBwb3B1bGFyZXM8L2g0PgogICAgICA8ZGl2IGNsYXNzPSJ0YWctY2xvdWQiPgogICAgICAgIDxzcGFuPmh0bWw8L3NwYW4+PHNwYW4+Y3NzPC9zcGFuPjxzcGFuPmphdmFzY3JpcHQ8L3NwYW4+PHNwYW4+ZGVzaWduPC9zcGFuPjxzcGFuPmlhPC9zcGFuPjxzcGFuPmFjZXNzaWJpbGlkYWRlPC9zcGFuPgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogIDwvYXNpZGU+CjwvZGl2PgoKPGZvb3Rlcj7CqSAyMDI2IFBvbnRvIEZpeG8uIFRvZG9zIG9zIGRpcmVpdG9zIHJlc2VydmFkb3MuPC9mb290ZXI+Cgo8c2NyaXB0PgogIChmdW5jdGlvbigpewogICAgY29uc3QgYnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3RoZW1lLXRvZ2dsZScpOwogICAgY29uc3Qgcm9vdCA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudDsKICAgIGNvbnN0IHNhbHZvID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ2Jsb2ctdGVtYScpOwogICAgY29uc3QgcHJlZmVyZUVzY3VybyA9IHdpbmRvdy5tYXRjaE1lZGlhKCcocHJlZmVycy1jb2xvci1zY2hlbWU6IGRhcmspJykubWF0Y2hlczsKICAgIGZ1bmN0aW9uIHNldEljb24oZXNjdXJvKXsgYnRuLnRleHRDb250ZW50ID0gZXNjdXJvID8gJ+KYgO+4jycgOiAn8J+MmSc7IH0KICAgIGlmIChzYWx2byA9PT0gJ2RhcmsnIHx8ICghc2Fsdm8gJiYgcHJlZmVyZUVzY3VybykpeyByb290LnNldEF0dHJpYnV0ZSgnZGF0YS10aGVtZScsJ2RhcmsnKTsgfQogICAgc2V0SWNvbihyb290LmdldEF0dHJpYnV0ZSgnZGF0YS10aGVtZScpID09PSAnZGFyaycpOwogICAgYnRuLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgZnVuY3Rpb24oKXsKICAgICAgY29uc3QgYXRpdm8gPSByb290LmdldEF0dHJpYnV0ZSgnZGF0YS10aGVtZScpID09PSAnZGFyayc7CiAgICAgIGlmIChhdGl2byl7IHJvb3QucmVtb3ZlQXR0cmlidXRlKCdkYXRhLXRoZW1lJyk7IGxvY2FsU3RvcmFnZS5zZXRJdGVtKCdibG9nLXRlbWEnLCdsaWdodCcpOyB9CiAgICAgIGVsc2UgeyByb290LnNldEF0dHJpYnV0ZSgnZGF0YS10aGVtZScsJ2RhcmsnKTsgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ2Jsb2ctdGVtYScsJ2RhcmsnKTsgfQogICAgICBzZXRJY29uKCFhdGl2byk7CiAgICB9KTsKICB9KSgpOwo8L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==",      codeEl:'code-blog',      frame:'frame-blog',      badge:'lines-blog' }
+  };
+
+  const RAW = {};
+  Object.keys(BASES).forEach(function(key){
+    const cfg = BASES[key];
+    const raw = decodeURIComponent(escape(atob(cfg.b64))); // decodifica base64 -> UTF-8 real
+    RAW[key] = raw;
+
+    // Preview ao vivo
+    const frame = document.getElementById(cfg.frame);
+    frame.srcdoc = raw;
+
+    // Código com destaque + numeração de linha
+    const escaped = escapeHtml(raw);
+    document.getElementById(cfg.codeEl).innerHTML = comLinhas(highlight(escaped));
+
+    // Badge de linhas
+    document.getElementById(cfg.badge).textContent = raw.split('\n').length + ' linhas · HTML+CSS+JS';
+  });
+
+  /* Botão "copiar código completo" (copia o texto cru, não o HTML colorido) */
+  document.querySelectorAll('.copy-btn[data-copy-raw]').forEach(function(b){
+    b.addEventListener('click', function(){
+      const key = b.getAttribute('data-copy-raw');
+      navigator.clipboard.writeText(RAW[key]).then(function(){
+        b.textContent = '✅ Copiado!'; b.classList.add('copied');
+        setTimeout(function(){ b.textContent = '📋 Copiar código completo'; b.classList.remove('copied'); }, 1800);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
